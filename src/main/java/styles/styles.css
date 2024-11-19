@@ -1,0 +1,71 @@
+.button {
+    -fx-background-color: #4A90E2;
+    -fx-text-fill: white;
+    -fx-padding: 8 16;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 3;
+    -fx-effect: dropshadow(one-pass-box, rgba(0, 0, 0, 0.15), 3, 0.0, 0, 1);
+}
+
+.button:hover {
+    -fx-background-color: #357ABD;
+}
+
+.label {
+    -fx-text-fill: #2d2d2d;
+    -fx-font-size: 14px;
+    -fx-font-weight: normal;
+}
+
+.text-field, .password-field, .combo-box, .text-area {
+    -fx-font-size: 13px;
+    -fx-padding: 5;
+    -fx-background-color: white;
+    -fx-border-color: #2d2d2d;
+    -fx-border-width: 1;
+    -fx-background-radius: 2;
+}
+
+.tab-content {
+    -fx-background-color: #AED6F1;
+    -fx-padding: 15;
+}
+
+.round-button {
+    -fx-background-radius: 50%;
+    -fx-min-width: 45px;
+    -fx-min-height: 45px;
+    -fx-max-width: 45px;
+    -fx-max-height: 45px;
+    -fx-background-image: url("/escolavision.png");
+    -fx-background-size: cover;
+}
+
+.tab-pane .tab {
+    -fx-background-color: #4A90E2;
+    -fx-padding: 5 10;
+    -fx-background-radius: 5 5 0 0;
+}
+
+.tab-pane .tab:selected {
+    -fx-background-color: #357ABD;
+    -fx-font-weight: bold;
+}
+
+.tab-pane .tab .tab-label {
+    -fx-text-fill: white;
+}
+
+.tab-pane .tab:selected .tab-label {
+    -fx-text-fill: white;
+}
+#imageWrapper {
+    -fx-border-color: #357ABD;  /* Red border color */
+    -fx-border-width: 3px;      /* Border width */
+    -fx-padding: 5px;           /* Padding to ensure space around the image */
+    -fx-background-color: white;  /* Make sure background is transparent */
+}
+
+
+
