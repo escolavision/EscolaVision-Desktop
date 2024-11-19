@@ -279,10 +279,10 @@ public class miControlador implements Initializable {
 	private void ajustarImagenes() {
 		imgViewPicAlum.setFitHeight(67);
 		imgViewPicAlum.setFitWidth(74);
+		imgViewPicArea.setFitHeight(67);
 		imgViewPicArea.setFitWidth(74);
-		imgViewPicArea.setFitWidth(100);
+		imgViewFoto1.setFitHeight(67);
 		imgViewFoto1.setFitWidth(74);
-		imgViewFoto1.setFitWidth(100);
 
 		imgViewPicAlum.setPreserveRatio(true);
 		imgViewPicArea.setPreserveRatio(true);

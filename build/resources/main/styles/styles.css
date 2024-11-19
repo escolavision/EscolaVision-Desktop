@@ -60,7 +60,7 @@
 .tab-pane .tab:selected .tab-label {
     -fx-text-fill: white;
 }
-#imageWrapper {
+#imageWrapper, #imageWrapper2, #imageWrapper3 {
     -fx-border-color: #357ABD;  /* Red border color */
     -fx-border-width: 3px;      /* Border width */
     -fx-padding: 5px;           /* Padding to ensure space around the image */
