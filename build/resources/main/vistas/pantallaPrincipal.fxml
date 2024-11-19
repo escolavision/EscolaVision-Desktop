@@ -104,7 +104,7 @@
 											<Insets bottom="10.0" left="15.0" right="15.0" top="10.0" />
 										</VBox.margin>
 									</ListView>
-									<Button contentDisplay="CENTER" prefHeight="26.0" prefWidth="160.0" text="_Editar" textAlignment="CENTER">
+									<Button fx:id="btnEditarTest" contentDisplay="CENTER" prefHeight="26.0" prefWidth="160.0" text="_Editar" textAlignment="CENTER">
 										<VBox.margin>
 											<Insets />
 										</VBox.margin>
@@ -190,7 +190,7 @@
 											</VBox.margin>
 										</ListView>
 										
-										<Button contentDisplay="CENTER" prefHeight="25.0" prefWidth="160.0" text="_Editar" textAlignment="CENTER">
+										<Button fx:id="btnEditarPreguntas" contentDisplay="CENTER" prefHeight="25.0" prefWidth="160.0" text="_Editar" textAlignment="CENTER">
 											<VBox.margin>
 												<Insets />
 											</VBox.margin>
@@ -285,7 +285,7 @@
 												<Insets bottom="10.0" left="15.0" right="15.0" top="10.0" />
 											</VBox.margin>
 										</ListView>
-										<Button contentDisplay="CENTER" prefHeight="25.0" prefWidth="160.0" text="_Editar" textAlignment="CENTER">
+										<Button fx:id="btnEditarAlumnos" contentDisplay="CENTER" prefHeight="25.0" prefWidth="160.0" text="_Editar" textAlignment="CENTER">
 											<VBox.margin>
 												<Insets />
 											</VBox.margin>
@@ -434,7 +434,7 @@
 												<Insets bottom="10.0" left="15.0" right="15.0" top="10.0" />
 											</VBox.margin>
 										</ListView>
-										<Button contentDisplay="CENTER" prefHeight="25.0" prefWidth="160.0" text="_Editar" textAlignment="CENTER">
+										<Button fx:id="btnEditarProfesores" contentDisplay="CENTER" prefHeight="25.0" prefWidth="160.0" text="_Editar" textAlignment="CENTER">
 											<VBox.margin>
 												<Insets />
 											</VBox.margin>
@@ -582,7 +582,7 @@
 												<Insets bottom="10.0" left="15.0" right="15.0" top="10.0" />
 											</VBox.margin>
 										</ListView>
-										<Button contentDisplay="CENTER" prefHeight="25.0" prefWidth="160.0" text="_Editar" textAlignment="CENTER">
+										<Button fx:id="btnEditarArea" contentDisplay="CENTER" prefHeight="25.0" prefWidth="160.0" text="_Editar" textAlignment="CENTER">
 											<VBox.margin>
 												<Insets />
 											</VBox.margin>
@@ -698,7 +698,7 @@
 												<Insets bottom="10.0" left="15.0" right="15.0" top="10.0" />
 											</VBox.margin>
 										</ListView>
-										<Button contentDisplay="CENTER" prefHeight="25.0" prefWidth="160.0" text="_Editar" textAlignment="CENTER">
+										<Button fx:id="btnEditarPxA" contentDisplay="CENTER" prefHeight="25.0" prefWidth="160.0" text="_Editar" textAlignment="CENTER">
 											<VBox.margin>
 												<Insets />
 											</VBox.margin>
@@ -816,7 +816,7 @@
 												<Insets bottom="10.0" left="15.0" right="15.0" top="10.0" />
 											</VBox.margin>
 										</ListView>
-										<Button contentDisplay="CENTER" prefHeight="25.0" prefWidth="160.0" text="_Editar" textAlignment="CENTER">
+										<Button fx:id="btnEditarIntentos" contentDisplay="CENTER" prefHeight="25.0" prefWidth="160.0" text="_Editar" textAlignment="CENTER">
 											<VBox.margin>
 												<Insets />
 											</VBox.margin>

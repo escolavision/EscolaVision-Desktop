@@ -35,7 +35,8 @@ public class miControlador implements Initializable {
 	@FXML private Button btnClearTest, btnClearQuest, btnClearAlum, btnClearProf, btnClearTry, btnLogo,
 			btnClearAr, btnDelTest, btnDelQuest, btnDelAlum, btnDelProf, btnDelTry, btnDelAr,
 			btnLogin, btnSaveTest, btnSaveQuest, btnSaveAlum, btnSaveProf, btnSaveTry, btnSaveAr,
-			btnClearPxA, btnDelPxA, btnSavePxA;
+			btnClearPxA, btnDelPxA, btnSavePxA, btnEditarTest, btnEditarPreguntas, btnEditarAlumnos,
+			btnEditarProfesores, btnEditarArea,btnEditarPxA , btnEditarIntentos;
 
 	@FXML private ListView<String> listViewAlumnos, listViewArea, listViewIntentos, listViewPreguntas,
 			listViewProfesores, listViewPxa, listViewTest;
@@ -192,6 +193,7 @@ public class miControlador implements Initializable {
 
 		listViewMap.forEach((tipo, listView) -> listView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
 			if (newValue != null) {
+				comprobarEditar(tipo);
 				switch (tipo) {
 					case "test" : {
 						Test test = buscarTestPorNombre(newValue);
@@ -271,10 +273,159 @@ public class miControlador implements Initializable {
 			}
 		}));
 
+		btnEditarTest.setOnAction(e -> {
+			if (btnEditarTest.getText().equals("Editar") || btnEditarTest.getText().equals("_Editar")) {
+				btnEditarTest.setText("Cancelar");
+			} else {
+				btnEditarTest.setText("Editar");
+			}
+			comprobarEditar("test");
+		});
+
+		btnEditarPreguntas.setOnAction(e -> {
+			if (btnEditarPreguntas.getText().equals("Editar") || btnEditarPreguntas.getText().equals("_Editar")) {
+				btnEditarPreguntas.setText("Cancelar");
+			} else {
+				btnEditarPreguntas.setText("Editar");
+			}
+			comprobarEditar("pregunta");
+		});
+
+		btnEditarAlumnos.setOnAction(e -> {
+			if (btnEditarAlumnos.getText().equals("Editar") || btnEditarAlumnos.getText().equals("_Editar")) {
+				btnEditarAlumnos.setText("Cancelar");
+			} else {
+				btnEditarAlumnos.setText("Editar");
+			}
+			comprobarEditar("alumno");
+		});
+
+		btnEditarProfesores.setOnAction(e -> {
+			if (btnEditarProfesores.getText().equals("Editar") || btnEditarProfesores.getText().equals("_Editar")) {
+				btnEditarProfesores.setText("Cancelar");
+			} else {
+				btnEditarProfesores.setText("Editar");
+			}
+			comprobarEditar("profesor");
+		});
+
+		btnEditarArea.setOnAction(e -> {
+			if (btnEditarArea.getText().equals("Editar") || btnEditarArea.getText().equals("_Editar")) {
+				btnEditarArea.setText("Cancelar");
+			} else {
+				btnEditarArea.setText("Editar");
+			}
+			comprobarEditar("area");
+		});
+
+		btnEditarIntentos.setOnAction(e -> {
+			if (btnEditarIntentos.getText().equals("Editar") || btnEditarIntentos.getText().equals("_Editar")) {
+				btnEditarIntentos.setText("Cancelar");
+			} else {
+				btnEditarIntentos.setText("Editar");
+			}
+			comprobarEditar("intentos");
+		});
+
+
 		ajustarImagenes();
-		habilitarArrastrarYSoltar();
-		agregarEventListenersParaSeleccionarImagen();
 	}
+
+	private void comprobarEditar(String tipo) {
+		switch (tipo) {
+			case "test": {
+				txtTestName.setEditable(btnEditarTest.getText().equals("Cancelar"));
+				break;
+			}
+			case "pregunta": {
+				boolean editable = btnEditarPreguntas.getText().equals("Cancelar");
+				cbTestQuest.setMouseTransparent(!editable);
+				txtEnunQuest.setEditable(editable);
+				break;
+			}
+			case "alumno": {
+				boolean editable = btnEditarAlumnos.getText().equals("Cancelar");
+				txtNameAlm.setEditable(editable);
+				txtSurnameAlm.setEditable(editable);
+				txtDNIAlm.setEditable(editable);
+				cbDNIProfAlm.setMouseTransparent(!editable);
+				txtPasswordAlm.setEditable(editable);
+				if (editable) {
+					habilitarArrastrarYSoltar();
+					agregarEventListenersParaSeleccionarImagen();
+				} else {
+					deshabilitarArrastrarYSoltar();
+					quitarEventListenersParaSeleccionarImagen();
+				}
+				break;
+			}
+			case "profesor": {
+				boolean editable = btnEditarProfesores.getText().equals("Cancelar");
+				txtNameProf.setEditable(editable);
+				txtSurnameProf.setEditable(editable);
+				txtDNIProf.setEditable(editable);
+				txtPasswordProf.setEditable(editable);
+				cbAreaProf.setMouseTransparent(!editable);
+				if (editable) {
+					habilitarArrastrarYSoltar();
+					agregarEventListenersParaSeleccionarImagen();
+				} else {
+					deshabilitarArrastrarYSoltar();
+					quitarEventListenersParaSeleccionarImagen();
+				}
+				break;
+			}
+			case "area": {
+				boolean editable = btnEditarArea.getText().equals("Cancelar");
+				txtNameArea.setEditable(editable);
+				txtDescripArea.setEditable(editable);
+				if (editable) {
+					habilitarArrastrarYSoltar();
+					agregarEventListenersParaSeleccionarImagen();
+				} else {
+					deshabilitarArrastrarYSoltar();
+					quitarEventListenersParaSeleccionarImagen();
+				}
+				break;
+			}
+			case "pxa": {
+				boolean editable = btnEditarArea.getText().equals("Cancelar");
+				cbAreaPxA.setMouseTransparent(!editable);
+				cbIdQuestPxA.setMouseTransparent(!editable);
+				txtEnumPxA.setEditable(editable);
+				break;
+			}
+			case "intentos": {
+				boolean editable = btnEditarIntentos.getText().equals("Cancelar");
+				cbIdTestTry.setMouseTransparent(!editable);
+				cbDNITry.setMouseTransparent(!editable);
+				txtDateTry.setEditable(editable);
+				txtTimeTry.setEditable(editable);
+				txtResTry.setEditable(editable);
+				break;
+			}
+			default: {
+			}
+		}
+	}
+
+	private void deshabilitarArrastrarYSoltar() {
+		deshabilitarArrastreImagen(imgViewPicAlum);
+		deshabilitarArrastreImagen(imgViewPicArea);
+		deshabilitarArrastreImagen(imgViewFoto1);
+	}
+
+	private void deshabilitarArrastreImagen(ImageView imageView) {
+		imageView.setOnDragOver(null);
+		imageView.setOnDragDropped(null);
+	}
+
+	private void quitarEventListenersParaSeleccionarImagen() {
+		imgViewPicAlum.setOnMouseClicked(null);
+		imgViewPicArea.setOnMouseClicked(null);
+		imgViewFoto1.setOnMouseClicked(null);
+	}
+
 
 	private void ajustarImagenes() {
 		imgViewPicAlum.setFitHeight(67);
