@@ -5,6 +5,7 @@ import ej.Tablas.Pregunta;
 import ej.Tablas.Test;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -27,5 +28,74 @@ public class PreguntaDAO extends AbstractDAO<Pregunta> {
         pregunta.setTest(test);
         pregunta.setEnunciado(rs.getString("enunciado"));
         return pregunta;
+    }
+
+    @Override
+    public boolean insert(Pregunta pregunta) {
+        String sql = "INSERT INTO pregunta (idtest, enunciado) VALUES (?, ?)";
+        boolean result = false;
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, pregunta.getTest().getId());
+            stmt.setString(2, pregunta.getEnunciado());
+
+                int rowsAffected = stmt.executeUpdate();
+
+            if (rowsAffected > 0) {
+                System.out.println("Pregunta insertada correctamente.");
+                result = true;
+            } else {
+                System.out.println("Error al insertar la pregunta.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error al insertar la pregunta: " + e.getMessage());
+        }
+        return result;
+    }
+
+    @Override
+    public boolean update(Pregunta pregunta) {
+        String sql = "UPDATE pregunta SET idtest = ?, enunciado = ? WHERE id = ?";
+        boolean result = false;
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, pregunta.getTest().getId());
+            stmt.setString(2, pregunta.getEnunciado());
+            stmt.setInt(3, pregunta.getId());
+
+            int rowsAffected = stmt.executeUpdate();
+
+            if (rowsAffected > 0) {
+                System.out.println("Pregunta actualizada correctamente.");
+                result = true;
+            } else {
+                System.out.println("Error al actualizar la pregunta.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error al actualizar la pregunta: " + e.getMessage());
+        }
+        return result;
+    }
+
+
+    @Override
+    public boolean delete(int id) {
+        String sql = "DELETE FROM pregunta WHERE id = ?";
+        boolean result = false;
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+
+            int rowsAffected = stmt.executeUpdate();
+
+            if (rowsAffected > 0) {
+                System.out.println("Pregunta con ID " + id + " ha sido eliminado correctamente.");
+                result = true;
+            } else {
+                System.out.println("No se encontró una pregunta con el ID " + id + ".");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al eliminar la pregunta con el ID "+id+".");
+        }
+        return result;
     }
 }

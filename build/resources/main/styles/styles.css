@@ -61,11 +61,18 @@
     -fx-text-fill: white;
 }
 #imageWrapper, #imageWrapper2, #imageWrapper3 {
-    -fx-border-color: #357ABD;  /* Red border color */
-    -fx-border-width: 3px;      /* Border width */
-    -fx-padding: 5px;           /* Padding to ensure space around the image */
-    -fx-background-color: white;  /* Make sure background is transparent */
+    -fx-border-color: #357ABD;
+    -fx-border-width: 3px;
+    -fx-padding: 5px;
+    -fx-background-color: white;
+}
+.combo-box{
+    -fx-background-color: transparent;
+    -fx-padding: 0px;
+    -fx-border-width: 0;
+    -fx-border-color: transparent;
 }
 
-
-
+.validation-error .error-indicator {
+    -fx-shape: null;  /* Remove the error triangle */
+}

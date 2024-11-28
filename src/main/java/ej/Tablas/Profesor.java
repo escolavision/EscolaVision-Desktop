@@ -7,6 +7,8 @@ public class Profesor {
     private String dni;
     private String foto;
     private Area area;
+    private String claveaccesoprof;
+    private boolean isOrientador;
 
     public Area getArea() {
         return area;
@@ -16,8 +18,7 @@ public class Profesor {
         this.area = area;
     }
 
-    private String claveaccesoprof;
-    private boolean isOrientador;
+
 
     public Profesor() {}
 

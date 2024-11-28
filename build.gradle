@@ -30,6 +30,7 @@ dependencies {
     implementation 'org.slf4j:slf4j-api:2.0.0-alpha0'
     implementation 'ch.qos.logback:logback-classic:1.4.8'
     implementation 'org.json:json:20210307'
+    implementation 'org.controlsfx:controlsfx:11.1.2'
 }
 
 mainClassName = 'ej.Main'
@@ -41,6 +42,10 @@ sourceSets {
             includes = ["**/*.fxml","**/*.css","**/*.png","**/*.html"] //Importante para poder abrir una extensión no reconocida
         }
     }
+}
+
+run {
+    jvmArgs = ['--add-opens', 'javafx.graphics/javafx.scene=ALL-UNNAMED']
 }
 
 

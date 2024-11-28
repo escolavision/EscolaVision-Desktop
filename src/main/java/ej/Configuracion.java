@@ -1,7 +1,7 @@
 package ej;
 
+import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -18,22 +18,28 @@ public class Configuracion {
     private String user;
     private String pwd;
 
-    public Configuracion() {
+    public Configuracion() throws IOException {
         cargarConfiguracion();
     }
 
-    private void cargarConfiguracion() {
-        String rutaRelativa = System.getProperty("user.dir") + "/config.properties";
-        try (InputStream input = new FileInputStream(rutaRelativa)) {
-            propiedades.load(input);
-            ip = propiedades.getProperty("IP");
-            port = propiedades.getProperty("Port");
-            bbdd = propiedades.getProperty("BBDD");
-            user = propiedades.getProperty("Username");
-            pwd = propiedades.getProperty("Pwd");
-        } catch (IOException ex) {
-            ex.printStackTrace();
+    private void cargarConfiguracion() throws IOException {
+        String rutaRelativa = "src/main/resources/config.properties";
+        File archivoConfig = new File(rutaRelativa);
+        if (archivoConfig.exists()) {
+            try (InputStream input = new FileInputStream(archivoConfig)) {
+                propiedades.load(input);
+                ip = propiedades.getProperty("IP");
+                port = propiedades.getProperty("Port");
+                bbdd = propiedades.getProperty("BBDD");
+                user = propiedades.getProperty("Username");
+                pwd = propiedades.getProperty("Pwd");
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        } else {
+            System.out.println("El archivo no existe en la ruta especificada.");
         }
+
     }
 
     public String getIP() {
