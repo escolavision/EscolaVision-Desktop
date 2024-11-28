@@ -218,6 +218,7 @@ public class miControlador implements Initializable {
         tabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldTab, newTab) -> {
             if (newTab != null) {
                 Button botonEditar = tabToButtonMap.get(oldTab);
+                // cambio tap a tap
 
                 /*if (botonEditar != null && botonEditar.getText().equals("Cancelar")) {
                     tabPane.getSelectionModel().select(oldTab);
