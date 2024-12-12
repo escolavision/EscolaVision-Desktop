@@ -1,6 +1,7 @@
 package ej.DAO.TablasDAO;
 
 import ej.DAO.AbstractDAO;
+import ej.Tablas.Alumno;
 import ej.Tablas.Area;
 import ej.Tablas.Profesor;
 
@@ -29,6 +30,7 @@ public class ProfesorDAO extends AbstractDAO<Profesor> {
         profesor.setApellidos(rs.getString("apellidos"));
         profesor.setClaveaccesoprof(rs.getString("claveaccesoprof"));
         profesor.setFoto(rs.getString("foto"));
+        profesor.setOrientador(rs.getBoolean("isOrientador"));
         int areaId = rs.getInt("idarea");
         if (!rs.wasNull()) {
             Area area = new AreaDAO(connection).findById(areaId);
@@ -67,7 +69,7 @@ public class ProfesorDAO extends AbstractDAO<Profesor> {
 
     @Override
     public boolean update(Profesor profesor) {
-        String sql = "UPDATE profesor SET nombre = ?, apellidos = ?, dni = ?, foto = ?, idarea = ?, claveaccesoprof = ?, isOrientador = ? WHERE id = ?";
+        String sql = "UPDATE profesor SET nombre = ?, apellidos = ?, dni = ?, foto = ?, idarea = ?, claveaccesoprof = ? WHERE id = ?";
         boolean result = false;
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, profesor.getNombre());
@@ -76,8 +78,7 @@ public class ProfesorDAO extends AbstractDAO<Profesor> {
             stmt.setString(4, profesor.getFoto());
             stmt.setInt(5, profesor.getArea().getId());
             stmt.setString(6, profesor.getClaveaccesoprof());
-            stmt.setBoolean(7, profesor.isOrientador());
-            stmt.setInt(8, profesor.getId());
+            stmt.setInt(7, profesor.getId());
 
             int rowsAffected = stmt.executeUpdate();
 
@@ -114,5 +115,27 @@ public class ProfesorDAO extends AbstractDAO<Profesor> {
             System.out.println("Error al eliminar el profesor: " + e.getMessage());
         }
         return result;
+    }
+
+    public Profesor buscarProfesorPorNombreYApellidos(String nombre, String apellidos) {
+        // Usamos una consulta que combine las condiciones de nombre y apellidos
+        String sql = "SELECT * FROM profesor WHERE nombre = ? AND apellidos = ?";
+        Profesor profesor = null;
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            // Establecemos los valores para nombre y apellidos
+            stmt.setString(1, nombre);
+            stmt.setString(2, apellidos);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    profesor = mapRowToEntity(rs);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return profesor;
     }
 }

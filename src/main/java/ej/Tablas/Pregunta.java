@@ -4,6 +4,7 @@ public class Pregunta {
 	private int id;
 	private Test test;
 	private String enunciado;
+	private String titulo;
 	
 	public int getId() {
 		return id;
@@ -27,5 +28,13 @@ public class Pregunta {
 	
 	public void setEnunciado(String enunciado) {
 		this.enunciado = enunciado;
+	}
+	
+	public String getTitulo() {
+		return titulo;
+	}
+	
+	public void setTitulo(String titulo) {
+		this.titulo = titulo;
 	}
 }

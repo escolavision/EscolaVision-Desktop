@@ -20,7 +20,6 @@ public class Main extends Application {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/vistas/pantallaPrincipal.fxml"));
             Parent root = loader.load();
             Scene scene = new Scene(root);
-            scene.getStylesheets().add(getClass().getResource("/styles/styles.css").toExternalForm());
             primaryStage.setScene(scene);
             primaryStage.setTitle("EscolaVision Desktop");
             primaryStage.getIcons().add(new Image("escolavision.png"));

@@ -3,7 +3,6 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
@@ -18,902 +17,999 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<StackPane fx:id="miStackPane" prefHeight="375.0" prefWidth="816.0" stylesheets="@../styles/styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ej.miControlador">
-	<TabPane fx:id="tabPane" prefHeight="405.0" prefWidth="797.0" StackPane.alignment="CENTER">
-		<Tab fx:id="tabHome" closable="false" text="EscolaVision">
-			<content>
+<?import javafx.scene.layout.Pane?>
+<StackPane fx:id="miStackPane" prefHeight="462.0" prefWidth="829.0" stylesheets="@../styles/styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ej.miControlador">
+	<VBox prefHeight="100.0" prefWidth="816.0">
+		<HBox fx:id="hbHeader" alignment="CENTER_LEFT" prefHeight="59.0" prefWidth="808.0" VBox.vgrow="NEVER">
+			<VBox.margin>
+				<Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+			</VBox.margin>
+			<Button fx:id="btnLogo" onAction="#mostrarMenu" styleClass="round-button" />
+			<Label fx:id="lblEscolavisionDesktop" alignment="CENTER" contentDisplay="CENTER" text="EscolaVision Desktop">
+				<font>
+					<Font name="System Bold" size="24.0" />
+				</font>
+				<HBox.margin>
+					<Insets left="10.0" />
+				</HBox.margin>
+			</Label>
+		</HBox>
+		<TabPane fx:id="tabPane" prefHeight="405.0" prefWidth="797.0" stylesheets="@../styles/styles.css" VBox.vgrow="ALWAYS">
+			<Tab fx:id="tabHome" closable="false" text="EscolaVision">
 				<StackPane styleClass="tab-content">
-					<children>
-						<HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
-							<children>
-								<ImageView fx:id="imglogo" fitHeight="270.0" fitWidth="270.0" pickOnBounds="true" preserveRatio="true">
-									<image>
-										<Image url="@../../resources/escolavision.png" />
-									</image>
-								</ImageView>
-								<VBox alignment="CENTER" prefHeight="481.0" prefWidth="256.0">
-									<children>
-										<Label fx:id="lblUser" text="Usuario" />
-										<TextField fx:id="txtUser" />
-										<Label fx:id="lblPassword" text="Contraseña" />
-										<PasswordField fx:id="txtPassword" />
-										<CheckBox fx:id="chkProf" mnemonicParsing="false" text="Profesor">
-											<padding>
-												<Insets top="10.0" />
-											</padding>
-										</CheckBox>
-										<Button fx:id="btnLogin" text="_Iniciar Sesión">
-											<VBox.margin>
-												<Insets top="10.0" />
-											</VBox.margin>
-										</Button>
-									</children>
-									<HBox.margin>
-										<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-									</HBox.margin>
-									<padding>
-										<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-									</padding>
-								</VBox>
-							</children>
-						</HBox>
-					</children>
+					<HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+						<ImageView fx:id="imglogo" fitHeight="270.0" fitWidth="270.0" pickOnBounds="true" preserveRatio="true" HBox.hgrow="ALWAYS">
+							<Image url="@../../resources/escolavision.png" />
+						</ImageView>
+						<VBox alignment="CENTER" prefHeight="481.0" prefWidth="256.0">
+							<HBox.margin>
+								<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+							</HBox.margin>
+							<padding>
+								<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+							</padding>
+							<Label fx:id="lblUser" styleClass="bold-label" text="Usuario" />
+							<TextField fx:id="txtUser" />
+							<Label fx:id="lblPassword" styleClass="bold-label" text="Contraseña">
+                        <VBox.margin>
+                           <Insets top="10.0" />
+                        </VBox.margin></Label>
+							<PasswordField fx:id="txtPassword" />
+							<CheckBox fx:id="chkProf" mnemonicParsing="false" styleClass="bold-label" text="Profesor">
+								<padding>
+									<Insets top="10.0" />
+								</padding>
+							</CheckBox>
+							<Button fx:id="btnLogin" text="_Iniciar Sesión">
+								<VBox.margin>
+									<Insets top="10.0" />
+								</VBox.margin>
+								<graphic>
+									<ImageView fx:id="imgViewlogIn">
+									</ImageView>
+								</graphic>
+							</Button>
+						</VBox>
+					</HBox>
 				</StackPane>
-			</content>
-		</Tab>
-		<Tab fx:id="tabTest" closable="false" text="Test">
-			<content>
+			</Tab>
+			<Tab fx:id="tabTest" closable="false" text="Test">
 				<StackPane styleClass="tab-content">
 					<BorderPane prefHeight="200.0" prefWidth="200.0">
 						<StackPane.margin>
-							<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+							<Insets />
 						</StackPane.margin>
 						<bottom>
 							<HBox alignment="CENTER" prefHeight="30.0" prefWidth="770.0" BorderPane.alignment="BOTTOM_RIGHT">
-								<children>
-									<Button fx:id="btnClearTest" text="_Limpiar">
-										<HBox.margin>
-											<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-										</HBox.margin>
-										<graphic>
-											<ImageView fx:id="imageViewLimpiar" />
-										</graphic>
-									</Button>
-									<Button fx:id="btnDelTest" text="_Eliminar">
-										<HBox.margin>
-											<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-										</HBox.margin>
-									</Button>
-									<Button fx:id="btnSaveTest" text="_Guardar">
-										<HBox.margin>
-											<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-										</HBox.margin>
-									</Button>
-								</children>
 								<BorderPane.margin>
-									<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+									<Insets />
 								</BorderPane.margin>
+								<Button fx:id="btnClearTest" text="_Limpiar">
+									<HBox.margin>
+										<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+									</HBox.margin>
+									<graphic>
+										<ImageView fx:id="imgClearTest">
+										</ImageView>
+									</graphic>
+								</Button>
+								<Button fx:id="btnDelTest" text="_Eliminar">
+									<HBox.margin>
+										<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+									</HBox.margin>
+									<graphic>
+										<ImageView fx:id="imgDelTest">
+										</ImageView>
+									</graphic>
+								</Button>
+								<Button fx:id="btnSaveTest" text="_Guardar">
+									<HBox.margin>
+										<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+									</HBox.margin>
+									<graphic>
+										<ImageView fx:id="imgSaveTest">
+										</ImageView>
+									</graphic>
+								</Button>
 							</HBox>
 						</bottom>
-						<right>
-							<VBox alignment="CENTER" prefHeight="430.0" prefWidth="190.0" BorderPane.alignment="CENTER">
-								<children>
-									<ListView fx:id="listViewTest" prefHeight="340.0" prefWidth="170.0">
-										<VBox.margin>
-											<Insets bottom="10.0" left="15.0" right="15.0" top="10.0" />
-										</VBox.margin>
-									</ListView>
-									<Button fx:id="btnEditarTest" contentDisplay="CENTER" prefHeight="26.0" prefWidth="160.0" text="_Editar" textAlignment="CENTER">
-										<VBox.margin>
-											<Insets />
-										</VBox.margin>
-									</Button>
-								</children>
-								<BorderPane.margin>
-									<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-								</BorderPane.margin>
-							</VBox>
-						</right>
 						<center>
-							<HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-								<children>
+							<VBox minHeight="275.8" BorderPane.alignment="CENTER">
+								<BorderPane.margin>
+									<Insets bottom="10.0" left="10.0" right="10.0" />
+								</BorderPane.margin>
+								<HBox nodeOrientation="LEFT_TO_RIGHT" spacing="10">
+									<Label styleClass="bold-label" text="Datos del test:" />
+								</HBox>
+
+								<HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="263.0" prefWidth="589.0" VBox.vgrow="ALWAYS">
 									<VBox prefHeight="415.0" prefWidth="100.0" spacing="10.0">
-										<children>
-											<Label fx:id="lblId" text="id" />
-											<Label fx:id="lblTestName" text="Nombre" />
-										</children>
 										<padding>
-											<Insets bottom="10.0" left="10.0" right="10.0" top="20.0" />
+											<Insets bottom="10.0" right="10.0" top="20.0" />
 										</padding>
+										<Label fx:id="lblId" text="Id" />
+										<Label fx:id="lblTestName" text="Nombre">
+                                 <VBox.margin>
+                                    <Insets top="10.0" />
+                                 </VBox.margin></Label>
 									</VBox>
-									<VBox prefHeight="395.0" prefWidth="165.0" spacing="10.0">
-										<children>
-											<TextField fx:id="txtIdTest" editable="false" prefHeight="27.0" prefWidth="298.0">
-												<padding>
-													<Insets top="10.0" />
-												</padding>
-											</TextField>
-											<TextField fx:id="txtTestName">
-												<padding>
-													<Insets top="10.0" />
-												</padding>
-											</TextField>
-										</children>
+									<VBox prefHeight="258.0" prefWidth="323.0" spacing="10.0">
 										<padding>
 											<Insets top="10.0" />
 										</padding>
+										<TextField fx:id="txtIdTest" disable="true" editable="false" prefHeight="27.0" prefWidth="298.0">
+											<padding>
+												<Insets top="10.0" />
+											</padding>
+										</TextField>
+										<TextArea fx:id="txtTestName" prefHeight="157.0" prefWidth="209.0" promptText="Introduce el nombre del test..." wrapText="true" />
 									</VBox>
-								</children>
-							</HBox>
+								</HBox>
+							</VBox>
 						</center>
+						<left>
+							<VBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="430.0" prefWidth="201.0" BorderPane.alignment="CENTER">
+								<BorderPane.margin>
+									<Insets bottom="10.0" left="10.0" right="10.0" />
+								</BorderPane.margin>
+								<Label styleClass="bold-label" text="Test guardados:">
+									<font>
+										<Font name="System Bold" size="12.0" />
+									</font>
+									<VBox.margin>
+										<Insets bottom="10.0" />
+									</VBox.margin>
+								</Label>
+								<ListView fx:id="listViewTest" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="206.0" prefWidth="171.0" VBox.vgrow="ALWAYS">
+									<VBox.margin>
+										<Insets bottom="10.0" left="15.0" right="15.0" />
+									</VBox.margin>
+								</ListView>
+								<Button fx:id="btnEditarTest" contentDisplay="CENTER" prefHeight="26.0" prefWidth="170.0" text="_Editar" textAlignment="CENTER">
+									<VBox.margin>
+										<Insets />
+									</VBox.margin>
+								</Button>
+							</VBox>
+						</left>
 					</BorderPane>
 				</StackPane>
-			</content>
-		</Tab>
+			</Tab>
 
-		<Tab fx:id="tabQuest" closable="false" text="Preguntas">
-			<content>
+			<Tab fx:id="tabQuest" closable="false" text="Preguntas">
 				<StackPane styleClass="tab-content">
-					<children>
-						<BorderPane prefHeight="200.0" prefWidth="200.0">
-							<bottom>
-								<HBox alignment="CENTER" prefHeight="30.0" prefWidth="770.0" BorderPane.alignment="BOTTOM_RIGHT">
-									<children>
-										<Button fx:id="btnClearQuest" text="_Limpiar">
-											<HBox.margin>
-												<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-											</HBox.margin>
-										</Button>
-										<Button fx:id="btnDelQuest" text="_Eliminar">
-											<HBox.margin>
-												<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-											</HBox.margin>
-										</Button>
-										<Button fx:id="btnSaveQuest" text="_Guardar">
-											<HBox.margin>
-												<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-											</HBox.margin>
-										</Button>
-									</children>
-									<BorderPane.margin>
+					<BorderPane prefHeight="200.0" prefWidth="200.0">
+						<bottom>
+							<HBox alignment="CENTER" prefHeight="30.0" prefWidth="770.0" BorderPane.alignment="BOTTOM_RIGHT">
+								<BorderPane.margin>
+									<Insets />
+								</BorderPane.margin>
+								<Button fx:id="btnClearQuest" text="_Limpiar">
+									<HBox.margin>
 										<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-									</BorderPane.margin>
+									</HBox.margin>
+									<graphic>
+										<ImageView fx:id="imgClearQuest">
+										</ImageView>
+									</graphic>
+								</Button>
+								<Button fx:id="btnDelQuest" text="_Eliminar">
+									<HBox.margin>
+										<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+									</HBox.margin>
+									<graphic>
+										<ImageView fx:id="imgDelQuest">
+										</ImageView>
+									</graphic>
+								</Button>
+								<Button fx:id="btnSaveQuest" text="_Guardar">
+									<HBox.margin>
+										<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+									</HBox.margin>
+									<graphic>
+										<ImageView fx:id="imgSaveQuest">
+										</ImageView>
+									</graphic>
+								</Button>
+							</HBox>
+						</bottom>
+						<center>
+							<VBox minHeight="275.8" BorderPane.alignment="CENTER">
+								<BorderPane.margin>
+									<Insets bottom="10.0" left="10.0" right="10.0" />
+								</BorderPane.margin>
+								<HBox prefHeight="21.0" prefWidth="589.0" VBox.vgrow="NEVER">
+									<Label text="Datos de la pregunta:" />
 								</HBox>
-							</bottom>
-							<right>
-								<VBox alignment="CENTER" prefHeight="430.0" prefWidth="190.0" BorderPane.alignment="CENTER">
-									<children>
-										<ListView fx:id="listViewPreguntas" prefHeight="340.0" prefWidth="170.0">
-											<VBox.margin>
-												<Insets bottom="10.0" left="15.0" right="15.0" top="10.0" />
-											</VBox.margin>
-										</ListView>
-
-										<Button fx:id="btnEditarPreguntas" contentDisplay="CENTER" prefHeight="25.0" prefWidth="160.0" text="_Editar" textAlignment="CENTER">
-											<VBox.margin>
-												<Insets />
-											</VBox.margin>
-										</Button>
-									</children>
-									<BorderPane.margin>
-										<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-									</BorderPane.margin>
-								</VBox>
-							</right>
-							<center>
-								<HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-									<children>
-										<VBox prefHeight="415.0" prefWidth="100.0" spacing="10.0">
-											<children>
-												<Label fx:id="lblId1" text="id" />
-												<Label fx:id="lblTestName1" text="Test">
-													<padding>
-														<Insets top="10.0" />
-													</padding>
-												</Label>
-												<Label fx:id="lblTestName11" text="Enunciado">
-													<padding>
-														<Insets top="15.0" />
-													</padding>
-												</Label>
-											</children>
-											<padding>
-												<Insets bottom="10.0" left="10.0" right="10.0" top="20.0" />
-											</padding>
-										</VBox>
-										<VBox fx:id="vboxQuest" prefHeight="395.0" prefWidth="165.0" spacing="10.0">
-											<children>
-												<TextField fx:id="txtIdQuest" editable="false" prefHeight="27.0" prefWidth="298.0">
-													<padding>
-														<Insets top="10.0" />
-													</padding>
-												</TextField>
-												<TextField fx:id="txtTestQuest" prefHeight="27.0" prefWidth="298.0">
-													<padding>
-														<Insets top="10.0" />
-													</padding>
-												</TextField>
-												<TextArea fx:id="txtEnunQuest" prefHeight="47.0" prefWidth="165.0" wrapText="true" />
-											</children>
+								<HBox alignment="CENTER_LEFT" prefHeight="208.0" prefWidth="557.0">
+									<VBox prefHeight="415.0" prefWidth="100.0" spacing="10.0">
+										<padding>
+											<Insets bottom="10.0" right="10.0" top="20.0" />
+										</padding>
+										<Label fx:id="lblId1" text="Id" />
+										<Label fx:id="lblTestName12" text="Título">
 											<padding>
 												<Insets top="10.0" />
 											</padding>
-										</VBox>
-									</children>
-								</HBox>
-							</center>
-							<StackPane.margin>
-								<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-							</StackPane.margin>
-						</BorderPane>
-					</children>
-				</StackPane>
-			</content>
-		</Tab>
-
-		<Tab fx:id="tabAlum" closable="false" text="Alumno">
-			<content>
-				<StackPane prefHeight="395.0" prefWidth="785.0" styleClass="tab-content">
-					<children>
-						<BorderPane prefHeight="200.0" prefWidth="200.0">
-							<bottom>
-								<HBox alignment="CENTER" prefHeight="30.0" prefWidth="770.0" BorderPane.alignment="BOTTOM_RIGHT">
-									<children>
-										<Button fx:id="btnClearAlum" text="_Limpiar">
-											<HBox.margin>
-												<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-											</HBox.margin>
-										</Button>
-										<Button fx:id="btnDelAlum" text="_Eliminar">
-											<HBox.margin>
-												<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-											</HBox.margin>
-										</Button>
-										<Button fx:id="btnSaveAlum" text="_Guardar">
-											<HBox.margin>
-												<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-											</HBox.margin>
-										</Button>
-									</children>
-									<BorderPane.margin>
-										<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-									</BorderPane.margin>
-								</HBox>
-							</bottom>
-							<right>
-								<VBox alignment="CENTER" prefHeight="430.0" prefWidth="190.0" BorderPane.alignment="CENTER">
-									<children>
-										<ListView fx:id="listViewAlumnos" prefHeight="340.0" prefWidth="170.0">
-											<VBox.margin>
-												<Insets bottom="10.0" left="15.0" right="15.0" top="10.0" />
-											</VBox.margin>
-										</ListView>
-										<Button fx:id="btnEditarAlumnos" contentDisplay="CENTER" prefHeight="25.0" prefWidth="160.0" text="_Editar" textAlignment="CENTER">
-											<VBox.margin>
-												<Insets />
-											</VBox.margin>
-										</Button>
-									</children>
-									<BorderPane.margin>
-										<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-									</BorderPane.margin>
-								</VBox>
-							</right>
-							<center>
-								<HBox alignment="CENTER_LEFT" prefHeight="266.0" prefWidth="468.0" BorderPane.alignment="CENTER">
-									<children>
-										<VBox prefHeight="415.0" prefWidth="100.0" spacing="10.0">
-											<children>
-												<Label fx:id="lblIdAlum" text="id" />
-												<Label fx:id="lblNameAlum" text="Nombre">
-													<padding>
-														<Insets top="10.0" />
-													</padding>
-												</Label>
-												<Label fx:id="lblSurnameAlum" text="Apellidos">
-													<padding>
-														<Insets top="10.0" />
-													</padding>
-												</Label>
-												<Label fx:id="lblDNIAlum" text="DNI">
-													<padding>
-														<Insets top="10.0" />
-													</padding>
-												</Label>
-											</children>
+										</Label>
+										<Label fx:id="lblTestName11" text="Enunciado">
 											<padding>
-												<Insets bottom="10.0" left="10.0" right="10.0" top="20.0" />
+												<Insets top="15.0" />
 											</padding>
-										</VBox>
-										<VBox prefHeight="395.0" prefWidth="165.0" spacing="10.0">
-											<children>
-												<TextField fx:id="txtIdAlm" editable="false" prefHeight="27.0" prefWidth="298.0">
-													<padding>
-														<Insets top="10.0" />
-													</padding>
-												</TextField>
-												<TextField fx:id="txtNameAlm" prefHeight="27.0" prefWidth="298.0">
-													<padding>
-														<Insets top="10.0" />
-													</padding>
-												</TextField>
-												<TextField fx:id="txtSurnameAlm" prefHeight="27.0" prefWidth="298.0">
-													<padding>
-														<Insets top="10.0" />
-													</padding>
-												</TextField>
-												<TextField fx:id="txtDNIAlm" prefHeight="27.0" prefWidth="298.0">
-													<padding>
-														<Insets top="10.0" />
-													</padding>
-												</TextField>
-											</children>
+										</Label>
+										<Label fx:id="lblTestName1" text="Test">
+											<VBox.margin>
+												<Insets top="40.0" />
+											</VBox.margin>
+										</Label>
+									</VBox>
+									<VBox fx:id="vboxQuest" prefHeight="210.0" prefWidth="323.0" spacing="10.0">
+										<padding>
+											<Insets top="10.0" />
+										</padding>
+										<TextField fx:id="txtIdQuest" disable="true" editable="false" prefHeight="27.0" prefWidth="298.0">
 											<padding>
 												<Insets top="10.0" />
 											</padding>
-										</VBox>
-										<VBox prefHeight="415.0" prefWidth="120.0" spacing="10.0">
-											<children>
-												<Label fx:id="lblDNIProfAlm" text="DNI Profesor">
-													<VBox.margin>
-														<Insets />
-													</VBox.margin>
-												</Label>
-												<Label fx:id="lblPasswordAlm" text="Clave Acceso">
-													<padding>
-														<Insets top="10.0" />
-													</padding>
-												</Label>
-												<Label fx:id="lblPicAlm" text="Foto">
-													<VBox.margin>
-														<Insets />
-													</VBox.margin>
-													<padding>
-														<Insets top="10.0" />
-													</padding></Label>
-											</children>
-											<padding>
-												<Insets bottom="10.0" left="10.0" right="10.0" top="20.0" />
-											</padding>
-										</VBox>
-										<VBox alignment="TOP_CENTER" prefHeight="395.0" prefWidth="165.0" spacing="10.0">
-											<children>
-												<ComboBox fx:id="cbDNIProfAlm" maxHeight="36.0" minHeight="0.0" prefHeight="36.0" prefWidth="165.2" />
-												<PasswordField fx:id="txtPasswordAlm" />
-												<StackPane fx:id="imageWrapper" maxHeight="50.0" maxWidth="50.0" prefHeight="90.0" prefWidth="50.0">
-													<ImageView fx:id="imgViewPicAlum" fitHeight="74.0" fitWidth="67.0" pickOnBounds="true" preserveRatio="true" />
-												</StackPane>
-
-											</children>
+										</TextField>
+										<TextField fx:id="txtTituloQuest" promptText="Introduce el título de la pregunta..." />
+										<TextArea fx:id="txtEnunQuest" prefHeight="72.0" prefWidth="323.0" promptText="Introduce el enunciado de la pregunta..." wrapText="true" />
+										<TextField fx:id="txtTestQuest" prefHeight="40.0" prefWidth="323.0" promptText="Introduce el test correspondiente a la pregunta...">
 											<padding>
 												<Insets top="10.0" />
 											</padding>
-										</VBox>
-									</children>
+										</TextField>
+									</VBox>
 								</HBox>
-							</center>
-							<StackPane.margin>
-								<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-							</StackPane.margin>
-						</BorderPane>
-					</children>
-				</StackPane>
-			</content>
-		</Tab>
-		<Tab fx:id="tabProf" closable="false" text="Profesor">
-			<content>
-				<StackPane styleClass="tab-content">
-					<children>
-						<BorderPane prefHeight="200.0" prefWidth="200.0">
-							<bottom>
-								<HBox alignment="CENTER" prefHeight="30.0" prefWidth="770.0" BorderPane.alignment="BOTTOM_RIGHT">
-									<children>
-										<Button fx:id="btnClearProf" text="_Limpiar">
-											<HBox.margin>
-												<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-											</HBox.margin>
-										</Button>
-										<Button fx:id="btnDelProf" text="_Eliminar">
-											<HBox.margin>
-												<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-											</HBox.margin>
-										</Button>
-										<Button fx:id="btnSaveProf" text="_Guardar">
-											<HBox.margin>
-												<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-											</HBox.margin>
-										</Button>
-									</children>
-									<BorderPane.margin>
-										<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-									</BorderPane.margin>
-								</HBox>
-							</bottom>
-							<right>
-								<VBox alignment="CENTER" prefHeight="430.0" prefWidth="190.0" BorderPane.alignment="CENTER">
-									<children>
-										<ListView fx:id="listViewProfesores" prefHeight="340.0" prefWidth="170.0">
-											<VBox.margin>
-												<Insets bottom="10.0" left="15.0" right="15.0" top="10.0" />
-											</VBox.margin>
-										</ListView>
-										<Button fx:id="btnEditarProfesores" contentDisplay="CENTER" prefHeight="25.0" prefWidth="160.0" text="_Editar" textAlignment="CENTER">
-											<VBox.margin>
-												<Insets />
-											</VBox.margin>
-										</Button>
-									</children>
-									<BorderPane.margin>
-										<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-									</BorderPane.margin>
-								</VBox>
-							</right>
-							<center>
-								<HBox alignment="CENTER_LEFT" prefHeight="266.0" prefWidth="468.0" BorderPane.alignment="CENTER">
-									<children>
-										<VBox prefHeight="415.0" prefWidth="100.0" spacing="10.0">
-											<children>
-												<Label fx:id="lblIdProf" text="id" />
-												<Label fx:id="lblNameProf" text="Nombre">
-													<padding>
-														<Insets top="10.0" />
-													</padding>
-												</Label>
-												<Label fx:id="lblSurnameProf" text="Apellidos">
-													<padding>
-														<Insets top="10.0" />
-													</padding>
-												</Label>
-												<Label fx:id="lblDNIProf" text="DNI">
-													<padding>
-														<Insets top="10.0" />
-													</padding>
-												</Label>
-											</children>
-											<padding>
-												<Insets bottom="10.0" left="10.0" right="10.0" top="20.0" />
-											</padding>
-										</VBox>
-										<VBox prefHeight="395.0" prefWidth="165.0" spacing="10.0">
-											<children>
-												<TextField fx:id="txtIdProf" editable="false" prefHeight="27.0" prefWidth="298.0">
-													<padding>
-														<Insets top="10.0" />
-													</padding>
-												</TextField>
-												<TextField fx:id="txtNameProf" prefHeight="27.0" prefWidth="298.0">
-													<padding>
-														<Insets top="10.0" />
-													</padding>
-												</TextField>
-												<TextField fx:id="txtSurnameProf" prefHeight="27.0" prefWidth="298.0">
-													<padding>
-														<Insets top="10.0" />
-													</padding>
-												</TextField>
-												<TextField fx:id="txtDNIProf" prefHeight="27.0" prefWidth="298.0">
-													<padding>
-														<Insets top="10.0" />
-													</padding>
-												</TextField>
-											</children>
-											<padding>
-												<Insets top="10.0" />
-											</padding>
-										</VBox>
-										<VBox prefHeight="415.0" prefWidth="120.0" spacing="10.0">
-											<children>
-												<Label fx:id="lblArea" text="Area">
-													<VBox.margin>
-														<Insets />
-													</VBox.margin>
-												</Label>
-												<Label fx:id="lblPassProf" text="Clave Acceso">
-													<padding>
-														<Insets top="10.0" />
-													</padding>
-												</Label>
-												<Label fx:id="lblPicProf" text="Foto">
-													<VBox.margin>
-														<Insets />
-													</VBox.margin>
-													<padding>
-														<Insets top="10.0" />
-													</padding></Label>
-											</children>
-											<padding>
-												<Insets bottom="10.0" left="10.0" right="10.0" top="20.0" />
-											</padding>
-										</VBox>
-										<VBox alignment="TOP_CENTER" prefHeight="395.0" prefWidth="165.0" spacing="10.0">
-											<children>
-												<ComboBox fx:id="cbAreaProf" minHeight="0.0" prefHeight="36.0" prefWidth="165.0" />
-												<PasswordField fx:id="txtPasswordProf" />
-												<StackPane fx:id="imageWrapper2" maxHeight="50.0" maxWidth="50.0" prefHeight="90.0" prefWidth="50.0">
-													<ImageView fx:id="imgViewFoto1" fitHeight="74.0" fitWidth="67.0" pickOnBounds="true" preserveRatio="true" />
-												</StackPane>
-											</children>
-											<padding>
-												<Insets top="10.0" />
-											</padding>
-										</VBox>
-									</children>
-								</HBox>
-							</center>
-							<StackPane.margin>
-								<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-							</StackPane.margin>
-						</BorderPane>
-					</children>
-				</StackPane>
-			</content>
-		</Tab>
-		<Tab fx:id="tabAr" closable="false" text="Area">
-			<content>
-				<StackPane styleClass="tab-content">
-					<children>
-						<BorderPane prefHeight="200.0" prefWidth="200.0">
-							<bottom>
-								<HBox alignment="CENTER" prefHeight="30.0" prefWidth="770.0" BorderPane.alignment="CENTER">
-									<children>
-										<Button fx:id="btnClearAr" text="_Limpiar">
-											<HBox.margin>
-												<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-											</HBox.margin>
-										</Button>
-										<Button fx:id="btnDelAr" text="_Eliminar">
-											<HBox.margin>
-												<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-											</HBox.margin>
-										</Button>
-										<Button fx:id="btnSaveAr" text="_Guardar">
-											<HBox.margin>
-												<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-											</HBox.margin>
-										</Button>
-									</children>
-									<BorderPane.margin>
+							</VBox>
+						</center>
+						<StackPane.margin>
+							<Insets />
+						</StackPane.margin>
+						<left>
+							<VBox alignment="CENTER" prefHeight="430.0" prefWidth="201.0" BorderPane.alignment="CENTER">
+								<BorderPane.margin>
+									<Insets bottom="10.0" left="10.0" right="10.0" />
+								</BorderPane.margin>
+								<Label styleClass="bold-label" text="Preguntas guardadas:">
+									<VBox.margin>
+										<Insets bottom="10.0" />
+									</VBox.margin>
+								</Label>
+								<ListView fx:id="listViewPreguntas" prefHeight="340.0" prefWidth="170.0" VBox.vgrow="ALWAYS">
+									<VBox.margin>
+										<Insets bottom="10.0" left="15.0" right="15.0" />
+									</VBox.margin>
+								</ListView>
+								<Button fx:id="btnEditarPreguntas" contentDisplay="CENTER" prefHeight="25.0" prefWidth="170.0" text="_Editar" textAlignment="CENTER">
+									<VBox.margin>
 										<Insets />
-									</BorderPane.margin>
-								</HBox>
-							</bottom>
-							<right>
-								<VBox alignment="CENTER" prefHeight="430.0" prefWidth="190.0" BorderPane.alignment="CENTER">
-									<children>
-										<ListView fx:id="listViewArea" prefHeight="340.0" prefWidth="170.0">
-											<VBox.margin>
-												<Insets bottom="10.0" left="15.0" right="15.0" top="10.0" />
-											</VBox.margin>
-										</ListView>
-										<Button fx:id="btnEditarArea" contentDisplay="CENTER" prefHeight="25.0" prefWidth="160.0" text="_Editar" textAlignment="CENTER">
-											<VBox.margin>
-												<Insets />
-											</VBox.margin>
-										</Button>
-									</children>
-									<BorderPane.margin>
-										<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-									</BorderPane.margin>
-								</VBox>
-							</right>
-							<center>
-								<HBox alignment="CENTER_LEFT" prefHeight="266.0" prefWidth="468.0" BorderPane.alignment="CENTER">
-									<children>
-										<VBox prefHeight="415.0" prefWidth="100.0" spacing="10.0">
-											<children>
-												<Label fx:id="lblIdArea" text="id" />
-												<Label fx:id="lblNameArea" text="Nombre">
-													<padding>
-														<Insets top="10.0" />
-													</padding>
-												</Label>
-												<Label fx:id="lblDescripArea" text="Descripcion">
-													<padding>
-														<Insets top="10.0" />
-													</padding>
-												</Label>
-											</children>
-											<padding>
-												<Insets bottom="10.0" left="10.0" right="10.0" top="20.0" />
-											</padding>
-										</VBox>
-										<VBox prefHeight="395.0" prefWidth="165.0" spacing="10.0">
-											<children>
-												<TextField fx:id="txtIdArea" editable="false" prefHeight="27.0" prefWidth="298.0">
-													<padding>
-														<Insets top="10.0" />
-													</padding>
-												</TextField>
-												<TextField fx:id="txtNameArea" prefHeight="27.0" prefWidth="298.0">
-													<padding>
-														<Insets top="10.0" />
-													</padding>
-												</TextField>
-												<TextArea fx:id="txtDescripArea" prefHeight="200.0" prefWidth="200.0" wrapText="true" />
-											</children>
-											<padding>
-												<Insets top="10.0" />
-											</padding>
-										</VBox>
-										<VBox prefHeight="415.0" prefWidth="120.0" spacing="10.0">
-											<children>
-												<Label fx:id="lblPicArea" text="Logo" />
-											</children>
-											<padding>
-												<Insets bottom="10.0" left="10.0" right="10.0" top="20.0" />
-											</padding>
-										</VBox>
-										<VBox prefHeight="395.0" prefWidth="165.0" spacing="10.0">
-											<children>
-												<StackPane fx:id="imageWrapper3" maxHeight="50.0" maxWidth="50.0" prefHeight="90.0" prefWidth="50.0">
-													<ImageView fx:id="imgViewPicArea" fitHeight="74.0" fitWidth="67.0" pickOnBounds="true" preserveRatio="true" />
-												</StackPane>
-											</children>
-											<padding>
-												<Insets top="10.0" />
-											</padding>
-										</VBox>
-									</children>
-								</HBox>
-							</center>
-							<StackPane.margin>
-								<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-							</StackPane.margin>
-						</BorderPane>
-					</children>
+									</VBox.margin>
+								</Button>
+							</VBox>
+						</left>
+					</BorderPane>
 				</StackPane>
-			</content>
-		</Tab>
-		<Tab fx:id="tabPxA" closable="false" text="PxA">
-			<content>
-				<StackPane prefHeight="327.0" prefWidth="814.0" styleClass="tab-content">
-					<children>
-						<BorderPane prefHeight="200.0" prefWidth="200.0">
-							<bottom>
-								<HBox alignment="CENTER" prefHeight="30.0" prefWidth="770.0" BorderPane.alignment="CENTER">
-									<children>
-										<Button fx:id="btnClearPxA" text="_Limpiar">
-											<HBox.margin>
-												<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-											</HBox.margin>
-										</Button>
-										<Button fx:id="btnDelPxA" text="_Eliminar">
-											<HBox.margin>
-												<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-											</HBox.margin>
-										</Button>
-										<Button fx:id="btnSavePxA" text="_Guardar">
-											<HBox.margin>
-												<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-											</HBox.margin>
-										</Button>
-									</children>
-									<BorderPane.margin>
+			</Tab>
+
+			<Tab fx:id="tabAlum" closable="false" text="Alumnado">
+				<StackPane prefHeight="395.0" prefWidth="785.0" styleClass="tab-content">
+					<BorderPane prefHeight="200.0" prefWidth="200.0">
+						<bottom>
+							<HBox alignment="CENTER" prefHeight="30.0" prefWidth="770.0" BorderPane.alignment="BOTTOM_RIGHT">
+								<BorderPane.margin>
+									<Insets />
+								</BorderPane.margin>
+								<Button fx:id="btnClearAlum" text="_Limpiar">
+									<HBox.margin>
 										<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-									</BorderPane.margin>
+									</HBox.margin>
+									<graphic>
+										<ImageView fx:id="imgClearAlum">
+										</ImageView>
+									</graphic>
+								</Button>
+								<Button fx:id="btnDelAlum" text="_Eliminar">
+									<HBox.margin>
+										<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+									</HBox.margin>
+									<graphic>
+										<ImageView fx:id="imgDelAlum">
+										</ImageView>
+									</graphic>
+								</Button>
+								<Button fx:id="btnSaveAlum" text="_Guardar">
+									<HBox.margin>
+										<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+									</HBox.margin>
+									<graphic>
+										<ImageView fx:id="imgSaveAlum">
+										</ImageView>
+									</graphic>
+								</Button>
+							</HBox>
+						</bottom>
+						<center>
+							<VBox minHeight="275.8" BorderPane.alignment="CENTER">
+								<BorderPane.margin>
+									<Insets bottom="10.0" left="10.0" right="10.0" />
+								</BorderPane.margin>
+								<HBox>
+									<Label styleClass="bold-label" text="Datos del alumnado:" />
 								</HBox>
-							</bottom>
-							<right>
-								<VBox alignment="CENTER" prefHeight="430.0" prefWidth="190.0" BorderPane.alignment="CENTER">
-									<children>
-										<ListView fx:id="listViewPxa" prefHeight="340.0" prefWidth="170.0">
-											<VBox.margin>
-												<Insets bottom="10.0" left="15.0" right="15.0" top="10.0" />
-											</VBox.margin>
-										</ListView>
-										<Button fx:id="btnEditarPxA" contentDisplay="CENTER" prefHeight="25.0" prefWidth="160.0" text="_Editar" textAlignment="CENTER">
-											<VBox.margin>
-												<Insets />
-											</VBox.margin>
-										</Button>
-									</children>
-									<BorderPane.margin>
-										<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-									</BorderPane.margin>
-								</VBox>
-							</right>
-							<center>
-								<HBox alignment="CENTER_LEFT" prefHeight="266.0" prefWidth="468.0" BorderPane.alignment="CENTER">
-									<children>
-										<VBox prefHeight="415.0" prefWidth="100.0" spacing="10.0">
-											<children>
-												<Label fx:id="lblIdPxA" text="id" />
-												<Label fx:id="lblAreaPxA" text="Area">
-													<padding>
-														<Insets top="10.0" />
-													</padding>
-												</Label>
-												<Label fx:id="lblEnunPxA" text="Pregunta">
-													<padding>
-														<Insets top="15.0" />
-													</padding>
-												</Label>
-											</children>
-											<padding>
-												<Insets bottom="10.0" left="10.0" right="10.0" top="20.0" />
-											</padding>
-										</VBox>
-										<VBox prefHeight="395.0" prefWidth="165.0" spacing="10.0">
-											<children>
-												<TextField fx:id="txtIdPxA" editable="false" prefHeight="27.0" prefWidth="298.0">
-													<padding>
-														<Insets top="10.0" />
-													</padding>
-												</TextField>
-												<ComboBox fx:id="cbAreaPxA" prefHeight="36.0" prefWidth="174.0" />
-												<ComboBox fx:id="cbIdQuestPxA" prefHeight="36.0" prefWidth="174.0" />
-											</children>
+								<HBox alignment="CENTER_LEFT" prefHeight="266.0" prefWidth="468.0">
+									<VBox prefHeight="258.0" prefWidth="106.0" spacing="10.0">
+										<padding>
+											<Insets bottom="10.0" right="10.0" top="20.0" />
+										</padding>
+										<Label fx:id="lblIdAlum" text="Id" />
+										<Label fx:id="lblNameAlum" text="Nombre">
 											<padding>
 												<Insets top="10.0" />
 											</padding>
-										</VBox>
-										<VBox prefHeight="415.0" prefWidth="120.0" spacing="10.0">
-											<children>
-												<Label fx:id="lblEnumPxA" text="Enunciado">
-													<VBox.margin>
-														<Insets top="80.0" />
-													</VBox.margin>
-												</Label>
-											</children>
-											<padding>
-												<Insets bottom="10.0" left="10.0" right="10.0" top="20.0" />
-											</padding>
-										</VBox>
-										<VBox prefHeight="395.0" prefWidth="165.0" spacing="10.0">
-											<children>
-												<TextArea fx:id="txtEnumPxA" editable="false" maxHeight="-Infinity" prefHeight="82.0" prefWidth="165.0">
-													<VBox.margin>
-														<Insets top="87.0" />
-													</VBox.margin>
-												</TextArea>
-											</children>
+										</Label>
+										<Label fx:id="lblSurnameAlum" text="Apellidos">
 											<padding>
 												<Insets top="10.0" />
 											</padding>
-										</VBox>
-									</children>
+										</Label>
+										<Label fx:id="lblDNIAlum" text="DNI">
+											<padding>
+												<Insets top="10.0" />
+											</padding>
+										</Label>
+										<Label fx:id="lblPasswordAlm" text="Clave Acceso">
+											<padding>
+												<Insets top="10.0" />
+											</padding>
+										</Label>
+									</VBox>
+									<VBox prefHeight="278.0" prefWidth="176.0" spacing="10.0">
+										<padding>
+											<Insets top="10.0" />
+										</padding>
+										<TextField fx:id="txtIdAlm" disable="true" editable="false" prefHeight="27.0" prefWidth="298.0">
+											<padding>
+												<Insets top="10.0" />
+											</padding>
+										</TextField>
+										<TextField fx:id="txtNameAlm" prefHeight="27.0" prefWidth="298.0" promptText="Introduce el nombre...">
+											<padding>
+												<Insets top="10.0" />
+											</padding>
+										</TextField>
+										<TextField fx:id="txtSurnameAlm" prefHeight="27.0" prefWidth="298.0" promptText="Introduce los apellidos...">
+											<padding>
+												<Insets top="10.0" />
+											</padding>
+										</TextField>
+										<TextField fx:id="txtDNIAlm" prefHeight="27.0" prefWidth="298.0" promptText="Introduce el DNI...">
+											<padding>
+												<Insets top="10.0" />
+											</padding>
+										</TextField>
+										<PasswordField fx:id="txtPasswordAlm" promptText="Introduce la contraseña..." />
+									</VBox>
+									<VBox alignment="TOP_CENTER" prefHeight="278.0" prefWidth="310.0" spacing="10.0">
+										<padding>
+											<Insets top="10.0" />
+										</padding>
+										<HBox.margin>
+											<Insets left="5.0" />
+										</HBox.margin>
+										<HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="NEVER">
+											<Label fx:id="lblPicAlm" prefHeight="30.0" prefWidth="34.0" text="Foto">
+												<padding>
+													<Insets top="10.0" />
+												</padding>
+												<HBox.margin>
+													<Insets left="5.0" right="30.0" />
+												</HBox.margin>
+											</Label>
+											<StackPane fx:id="imageWrapper" maxHeight="50.0" maxWidth="50.0" prefHeight="90.0" prefWidth="50.0">
+												<ImageView fx:id="imgViewPicAlum" fitHeight="74.0" fitWidth="67.0" pickOnBounds="true" preserveRatio="true" />
+											</StackPane>
+										</HBox>
+										<HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="NEVER">
+											<Label fx:id="lblDNIProfAlm" prefHeight="20.0" prefWidth="118.0" text="Profesor">
+												<HBox.margin>
+													<Insets left="5.0" top="5.0" />
+												</HBox.margin>
+											</Label>
+											<TextField fx:id="txtDNIProfAlm" prefHeight="32.0" prefWidth="296.0" promptText="Introduce nombre y apellidos del prof.." />
+										</HBox>
+
+									</VBox>
 								</HBox>
-							</center>
-							<StackPane.margin>
-								<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-							</StackPane.margin>
-						</BorderPane>
-					</children>
+							</VBox>
+						</center>
+						<StackPane.margin>
+							<Insets />
+						</StackPane.margin>
+						<left>
+							<VBox alignment="CENTER" prefHeight="430.0" prefWidth="201.0" BorderPane.alignment="CENTER">
+								<BorderPane.margin>
+									<Insets bottom="10.0" left="10.0" right="10.0" />
+								</BorderPane.margin>
+								<Label styleClass="bold-label" text="Alumnado guardado:">
+									<VBox.margin>
+										<Insets bottom="10.0" />
+									</VBox.margin>
+								</Label>
+								<ListView fx:id="listViewAlumnos" prefHeight="340.0" prefWidth="170.0" VBox.vgrow="ALWAYS">
+									<VBox.margin>
+										<Insets bottom="10.0" left="15.0" right="15.0" />
+									</VBox.margin>
+								</ListView>
+								<Button fx:id="btnEditarAlumnos" contentDisplay="CENTER" prefHeight="25.0" prefWidth="170.0" text="_Editar" textAlignment="CENTER">
+									<VBox.margin>
+										<Insets />
+									</VBox.margin>
+								</Button>
+							</VBox>
+						</left>
+					</BorderPane>
 				</StackPane>
-			</content>
-		</Tab>
-		<Tab fx:id="tabTr" closable="false" text="Intentos">
-			<content>
+			</Tab>
+			<Tab fx:id="tabProf" closable="false" text="Profesorado">
 				<StackPane styleClass="tab-content">
-					<children>
-						<BorderPane prefHeight="200.0" prefWidth="200.0">
-							<bottom>
-								<HBox alignment="CENTER" prefHeight="30.0" prefWidth="770.0" BorderPane.alignment="BOTTOM_RIGHT">
-									<children>
-										<Button fx:id="btnClearTry" text="_Limpiar">
-											<HBox.margin>
-												<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-											</HBox.margin>
-										</Button>
-										<Button fx:id="btnDelTry" text="_Eliminar">
-											<HBox.margin>
-												<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-											</HBox.margin>
-										</Button>
-										<Button fx:id="btnSaveTry" text="_Guardar">
-											<HBox.margin>
-												<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-											</HBox.margin>
-										</Button>
-									</children>
-									<BorderPane.margin>
+					<BorderPane prefHeight="200.0" prefWidth="200.0">
+						<bottom>
+							<HBox alignment="CENTER" prefHeight="30.0" prefWidth="770.0" BorderPane.alignment="BOTTOM_RIGHT">
+								<BorderPane.margin>
+									<Insets />
+								</BorderPane.margin>
+								<Button fx:id="btnClearProf" text="_Limpiar">
+									<HBox.margin>
 										<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-									</BorderPane.margin>
+									</HBox.margin>
+									<graphic>
+										<ImageView fx:id="imgClearProf">
+										</ImageView>
+									</graphic>
+								</Button>
+								<Button fx:id="btnDelProf" text="_Eliminar">
+									<HBox.margin>
+										<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+									</HBox.margin>
+									<graphic>
+										<ImageView fx:id="imgDelProf">
+										</ImageView>
+									</graphic>
+								</Button>
+								<Button fx:id="btnSaveProf" text="_Guardar">
+									<HBox.margin>
+										<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+									</HBox.margin>
+									<graphic>
+										<ImageView fx:id="imgSaveProf">
+										</ImageView>
+									</graphic>
+								</Button>
+							</HBox>
+						</bottom>
+						<center>
+							<VBox minHeight="275.8" BorderPane.alignment="CENTER">
+								<BorderPane.margin>
+									<Insets bottom="10.0" left="10.0" right="10.0" />
+								</BorderPane.margin>
+								<HBox>
+									<Label styleClass="bold-label" text="Datos del profesorado:" />
 								</HBox>
-							</bottom>
-							<right>
-								<VBox alignment="CENTER" prefHeight="430.0" prefWidth="190.0" BorderPane.alignment="CENTER">
-									<children>
-										<ListView fx:id="listViewIntentos" prefHeight="340.0" prefWidth="170.0">
+								<HBox alignment="CENTER_LEFT" prefHeight="266.0" prefWidth="468.0">
+									<VBox prefHeight="272.0" prefWidth="83.0" spacing="10.0">
+										<padding>
+											<Insets bottom="10.0" right="10.0" top="20.0" />
+										</padding>
+										<Label fx:id="lblIdProf" text="Id" />
+										<Label fx:id="lblNameProf" text="Nombre">
+											<padding>
+												<Insets top="10.0" />
+											</padding>
+										</Label>
+										<Label fx:id="lblSurnameProf" text="Apellidos">
+											<padding>
+												<Insets top="10.0" />
+											</padding>
+										</Label>
+										<Label fx:id="lblDNIProf" text="DNI">
+											<padding>
+												<Insets top="10.0" />
+											</padding>
+										</Label>
+										<Label fx:id="lblArea" text="Área">
 											<VBox.margin>
-												<Insets bottom="10.0" left="15.0" right="15.0" top="10.0" />
+												<Insets top="10.0" />
 											</VBox.margin>
-										</ListView>
-										<Button fx:id="btnEditarIntentos" contentDisplay="CENTER" prefHeight="25.0" prefWidth="160.0" text="_Editar" textAlignment="CENTER">
+										</Label>
+									</VBox>
+									<VBox prefHeight="278.0" prefWidth="218.0" spacing="10.0">
+										<padding>
+											<Insets top="10.0" />
+										</padding>
+										<TextField fx:id="txtIdProf" disable="true" editable="false" prefHeight="27.0" prefWidth="298.0">
+											<padding>
+												<Insets top="10.0" />
+											</padding>
+										</TextField>
+										<TextField fx:id="txtNameProf" prefHeight="27.0" prefWidth="298.0" promptText="Introduce el nombre...">
+											<padding>
+												<Insets top="10.0" />
+											</padding>
+										</TextField>
+										<TextField fx:id="txtSurnameProf" prefHeight="27.0" prefWidth="298.0" promptText="Introduce los apellidos...">
+											<padding>
+												<Insets top="10.0" />
+											</padding>
+										</TextField>
+										<TextField fx:id="txtDNIProf" prefHeight="27.0" prefWidth="298.0" promptText="Introduce el DNI...">
+											<padding>
+												<Insets top="10.0" />
+											</padding>
+										</TextField>
+										<TextField fx:id="txtAreaProf" prefHeight="26.0" prefWidth="207.0" promptText="Introduce el area correspondiente..." />
+									</VBox>
+									<VBox alignment="TOP_CENTER" prefHeight="278.0" prefWidth="288.0" spacing="10.0">
+										<padding>
+											<Insets top="10.0" />
+										</padding>
+										<HBox prefHeight="52.0" prefWidth="288.0">
+											<Label fx:id="lblPassProf" prefHeight="20.0" prefWidth="117.0" text="Clave Acceso">
+												<HBox.margin>
+													<Insets left="10.0" top="5.0" />
+												</HBox.margin>
+											</Label>
+											<PasswordField fx:id="txtPasswordProf" promptText="Introduce la contraseña..." />
+										</HBox>
+										<HBox prefHeight="100.0" prefWidth="200.0">
+											<Label fx:id="lblPicProf" prefHeight="30.0" prefWidth="116.0" text="Foto">
+												<padding>
+													<Insets top="10.0" />
+												</padding>
+												<HBox.margin>
+													<Insets left="10.0" />
+												</HBox.margin>
+											</Label>
+											<StackPane fx:id="imageWrapper2" maxHeight="50.0" maxWidth="50.0" prefHeight="90.0" prefWidth="50.0">
+												<ImageView fx:id="imgViewFoto1" fitHeight="74.0" fitWidth="67.0" pickOnBounds="true" preserveRatio="true" />
+											</StackPane>
+										</HBox>
+									</VBox>
+								</HBox>
+							</VBox>
+						</center>
+						<StackPane.margin>
+							<Insets />
+						</StackPane.margin>
+						<left>
+							<VBox alignment="CENTER" prefHeight="430.0" prefWidth="201.0" BorderPane.alignment="CENTER">
+								<BorderPane.margin>
+									<Insets bottom="10.0" left="10.0" right="10.0" />
+								</BorderPane.margin>
+								<Label styleClass="bold-label" text="Profesorado guardado:">
+									<VBox.margin>
+										<Insets bottom="10.0" />
+									</VBox.margin>
+								</Label>
+								<ListView fx:id="listViewProfesores" prefHeight="340.0" prefWidth="170.0" VBox.vgrow="ALWAYS">
+									<VBox.margin>
+										<Insets bottom="10.0" left="15.0" right="15.0" />
+									</VBox.margin>
+								</ListView>
+								<Button fx:id="btnEditarProfesores" contentDisplay="CENTER" prefHeight="25.0" prefWidth="170.0" text="_Editar" textAlignment="CENTER">
+									<VBox.margin>
+										<Insets />
+									</VBox.margin>
+								</Button>
+							</VBox>
+						</left>
+					</BorderPane>
+				</StackPane>
+			</Tab>
+			<Tab fx:id="tabAr" closable="false" text="Área">
+				<StackPane styleClass="tab-content">
+					<BorderPane prefHeight="200.0" prefWidth="200.0">
+						<bottom>
+							<HBox alignment="CENTER" prefHeight="30.0" prefWidth="770.0" BorderPane.alignment="CENTER">
+								<BorderPane.margin>
+									<Insets />
+								</BorderPane.margin>
+								<Button fx:id="btnClearAr" disable="true" text="_Limpiar">
+									<HBox.margin>
+										<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+									</HBox.margin>
+									<graphic>
+										<ImageView fx:id="imgClearAr">
+										</ImageView>
+									</graphic>
+								</Button>
+								<Button fx:id="btnDelAr" disable="true" text="_Eliminar">
+									<HBox.margin>
+										<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+									</HBox.margin>
+									<graphic>
+										<ImageView fx:id="imgDelAr">
+										</ImageView>
+									</graphic>
+								</Button>
+								<Button fx:id="btnSaveAr" disable="true" text="_Guardar">
+									<HBox.margin>
+										<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+									</HBox.margin>
+									<graphic>
+										<ImageView fx:id="imgSaveAr">
+										</ImageView>
+									</graphic>
+								</Button>
+							</HBox>
+						</bottom>
+						<center>
+							<VBox minHeight="275.8" BorderPane.alignment="CENTER">
+								<BorderPane.margin>
+									<Insets bottom="10.0" left="10.0" right="10.0" />
+								</BorderPane.margin>
+								<HBox>
+									<VBox.margin>
+										<Insets bottom="10.0" />
+									</VBox.margin>
+									<Label styleClass="bold-label" text="Datos del área:" />
+								</HBox>
+								<HBox alignment="CENTER_LEFT" prefHeight="120.0" prefWidth="557.0">
+									<VBox prefHeight="128.0" prefWidth="100.0" spacing="10.0">
+										<Label fx:id="lblIdArea" text="Id" />
+										<Label fx:id="lblNameArea" text="Nombre">
+											<VBox.margin>
+												<Insets top="28.0" />
+											</VBox.margin>
+										</Label>
+                              <HBox.margin>
+                                 <Insets bottom="10.0" right="10.0" top="5.0" />
+                              </HBox.margin>
+									</VBox>
+									<VBox prefHeight="122.0" prefWidth="220.0" spacing="10.0">
+										<TextField fx:id="txtIdArea" disable="true" editable="false" prefHeight="27.0" prefWidth="298.0" />
+										<TextField fx:id="txtNameArea" prefHeight="27.0" prefWidth="298.0">
+											<VBox.margin>
+												<Insets top="18.0" />
+											</VBox.margin>
+										</TextField>
+									</VBox>
+									<VBox alignment="TOP_RIGHT" prefHeight="130.0" prefWidth="82.0" spacing="10.0">
+										<padding>
+											<Insets bottom="10.0" left="10.0" right="10.0" top="20.0" />
+										</padding>
+										<HBox.margin>
+											<Insets left="20.0" />
+										</HBox.margin>
+										<Label fx:id="lblPicArea" text="Logo">
+											<VBox.margin>
+												<Insets right="10.0" />
+											</VBox.margin>
+										</Label>
+									</VBox>
+									<VBox prefHeight="130.0" prefWidth="102.0" spacing="10.0">
+										<padding>
+											<Insets top="10.0" />
+										</padding>
+										<StackPane fx:id="imageWrapper3" maxHeight="50.0" maxWidth="50.0" prefHeight="90.0" prefWidth="50.0">
+											<ImageView fx:id="imgViewPicArea" fitHeight="74.0" fitWidth="67.0" pickOnBounds="true" preserveRatio="true" />
+										</StackPane>
+									</VBox>
+								</HBox>
+								<HBox prefHeight="80.0" prefWidth="557.0">
+									<Label fx:id="lblDescripArea" prefHeight="30.0" prefWidth="94.0" text="Descripción">
+										<padding>
+											<Insets top="10.0" />
+										</padding>
+										<HBox.margin>
+											<Insets right="25.0" />
+										</HBox.margin>
+									</Label>
+									<TextArea fx:id="txtDescripArea" prefHeight="46.0" prefWidth="456.0" wrapText="true" />
+								</HBox>
+							</VBox>
+						</center>
+						<StackPane.margin>
+							<Insets />
+						</StackPane.margin>
+						<left>
+							<VBox alignment="CENTER" prefHeight="430.0" prefWidth="201.0" BorderPane.alignment="CENTER">
+								<BorderPane.margin>
+									<Insets bottom="10.0" left="10.0" right="10.0" />
+								</BorderPane.margin>
+								<Label styleClass="bold-label" text="Áreas guardadas:">
+									<VBox.margin>
+										<Insets bottom="10.0" />
+									</VBox.margin>
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+								</Label>
+								<ListView fx:id="listViewArea" prefHeight="340.0" prefWidth="170.0" VBox.vgrow="ALWAYS">
+									<VBox.margin>
+										<Insets bottom="10.0" left="15.0" right="15.0" />
+									</VBox.margin>
+								</ListView>
+								<Button fx:id="btnEditarArea" contentDisplay="CENTER" disable="true" prefHeight="25.0" prefWidth="170.0" text="_Editar" textAlignment="CENTER">
+									<VBox.margin>
+										<Insets />
+									</VBox.margin>
+								</Button>
+							</VBox>
+						</left>
+					</BorderPane>
+				</StackPane>
+			</Tab>
+			<Tab fx:id="tabPxA" closable="false" text="Pregunta x Área">
+				<StackPane prefHeight="327.0" prefWidth="814.0" styleClass="tab-content">
+					<BorderPane prefHeight="200.0" prefWidth="200.0">
+						<bottom>
+							<HBox alignment="CENTER" prefHeight="30.0" prefWidth="770.0" BorderPane.alignment="CENTER">
+								<BorderPane.margin>
+									<Insets />
+								</BorderPane.margin>
+								<Button fx:id="btnClearPxA" text="_Limpiar">
+									<HBox.margin>
+										<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+									</HBox.margin>
+									<graphic>
+										<ImageView fx:id="imgClearPxA">
+										</ImageView>
+									</graphic>
+								</Button>
+								<Button fx:id="btnDelPxA" text="_Eliminar">
+									<HBox.margin>
+										<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+									</HBox.margin>
+									<graphic>
+										<ImageView fx:id="imgDelPxA">
+										</ImageView>
+									</graphic>
+								</Button>
+								<Button fx:id="btnSavePxA" text="_Guardar">
+									<HBox.margin>
+										<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+									</HBox.margin>
+									<graphic>
+										<ImageView fx:id="imgSavePxA">
+										</ImageView>
+									</graphic>
+								</Button>
+							</HBox>
+						</bottom>
+						<center>
+							<VBox minHeight="275.8" BorderPane.alignment="CENTER">
+								<BorderPane.margin>
+									<Insets bottom="10.0" left="10.0" right="10.0" />
+								</BorderPane.margin>
+								<HBox>
+									<Label styleClass="bold-label" text="Datos de la Pregunta x Área:" />
+								</HBox>
+								<HBox alignment="CENTER_LEFT" prefHeight="266.0" prefWidth="468.0">
+									<VBox prefHeight="415.0" prefWidth="100.0" spacing="10.0">
+										<padding>
+											<Insets bottom="10.0" right="10.0" top="20.0" />
+										</padding>
+										<Label fx:id="lblIdPxA" text="Id" />
+										<Label fx:id="lblAreaPxA" text="Área">
+											<padding>
+												<Insets top="10.0" />
+											</padding>
+										</Label>
+									</VBox>
+									<VBox prefHeight="395.0" prefWidth="165.0" spacing="10.0">
+										<padding>
+											<Insets top="10.0" />
+										</padding>
+										<TextField fx:id="txtIdPxA" disable="true" editable="false" prefHeight="27.0" prefWidth="298.0">
+											<padding>
+												<Insets top="10.0" />
+											</padding>
+										</TextField>
+										<TextField fx:id="txtAreaPxA" promptText="Introduce área..." />
+									</VBox>
+									<VBox prefHeight="415.0" prefWidth="120.0" spacing="10.0">
+										<padding>
+											<Insets bottom="10.0" left="10.0" right="10.0" top="20.0" />
+										</padding>
+										<Label fx:id="lblEnunPxA" text="Pregunta" />
+										<Label fx:id="lblEnumPxA" text="Enunciado">
+											<VBox.margin>
+												<Insets top="20.0" />
+											</VBox.margin>
+										</Label>
+									</VBox>
+									<VBox prefHeight="395.0" prefWidth="165.0" spacing="10.0">
+										<padding>
+											<Insets top="10.0" />
+										</padding>
+										<TextField fx:id="txtQuestPxA" promptText="Introduce pregunta..." />
+										<TextArea fx:id="txtEnumPxA" editable="false" maxHeight="-Infinity" prefHeight="144.0" prefWidth="166.0" promptText="Al seleccionar una pregunta, se autocompletará este campo." wrapText="true">
+											<VBox.margin>
+												<Insets top="10.0" />
+											</VBox.margin>
+										</TextArea>
+									</VBox>
+								</HBox>
+							</VBox>
+						</center>
+						<StackPane.margin>
+							<Insets />
+						</StackPane.margin>
+						<left>
+							<VBox alignment="CENTER" prefHeight="268.0" prefWidth="201.0" BorderPane.alignment="CENTER">
+								<BorderPane.margin>
+									<Insets bottom="10.0" left="10.0" right="10.0" />
+								</BorderPane.margin>
+								<Label prefHeight="20.0" prefWidth="238.0" styleClass="bold-label" text="Preguntas x Áreas guardadas:">
+									<VBox.margin>
+										<Insets bottom="10.0" />
+									</VBox.margin>
+								</Label>
+								<ListView fx:id="listViewPxa" prefHeight="340.0" prefWidth="170.0" VBox.vgrow="ALWAYS">
+									<VBox.margin>
+										<Insets bottom="10.0" left="15.0" right="15.0" />
+									</VBox.margin>
+								</ListView>
+								<Button fx:id="btnEditarPxA" contentDisplay="CENTER" prefHeight="25.0" prefWidth="170.0" text="_Editar" textAlignment="CENTER">
+									<VBox.margin>
+										<Insets />
+									</VBox.margin>
+								</Button>
+							</VBox>
+						</left>
+					</BorderPane>
+				</StackPane>
+			</Tab>
+			<Tab fx:id="tabTr" closable="false" text="Intentos">
+				<StackPane styleClass="tab-content">
+					<BorderPane prefHeight="200.0" prefWidth="200.0">
+						<bottom>
+							<HBox alignment="CENTER" prefHeight="30.0" prefWidth="746.0" BorderPane.alignment="BOTTOM_RIGHT">
+								<BorderPane.margin>
+									<Insets />
+								</BorderPane.margin>
+								<Button fx:id="btnClearTry" text="_Limpiar">
+									<HBox.margin>
+										<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+									</HBox.margin>
+									<graphic>
+										<ImageView fx:id="imgClearTry">
+										</ImageView>
+									</graphic>
+								</Button>
+								<Button fx:id="btnDelTry" text="_Eliminar">
+									<HBox.margin>
+										<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+									</HBox.margin>
+									<graphic>
+										<ImageView fx:id="imgDelTry">
+										</ImageView>
+									</graphic>
+								</Button>
+								<Button fx:id="btnSaveTry" text="_Guardar">
+									<HBox.margin>
+										<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+									</HBox.margin>
+									<graphic>
+										<ImageView fx:id="imgSaveTry">
+										</ImageView>
+									</graphic>
+								</Button>
+							</HBox>
+						</bottom>
+						<center>
+							<VBox minHeight="275.8" BorderPane.alignment="CENTER">
+								<BorderPane.margin>
+									<Insets bottom="10.0" left="10.0" right="10.0" />
+								</BorderPane.margin>
+								<HBox styleClass="bold-label">
+									<Label styleClass="bold-label" text="Datos del intento:" />
+								</HBox>
+								<HBox alignment="CENTER_LEFT" prefHeight="136.0" prefWidth="589.0">
+									<VBox prefHeight="134.0" prefWidth="82.0" spacing="10.0">
+										<padding>
+											<Insets bottom="10.0" right="10.0" top="20.0" />
+										</padding>
+										<Label fx:id="lblIdTry" text="Id" />
+										<Label fx:id="lblTestTry" text="Test">
+											<padding>
+												<Insets top="10.0" />
+											</padding>
+										</Label>
+										<Label fx:id="lblDNITry" text="Alumno">
+											<padding>
+												<Insets top="12.0" />
+											</padding>
+										</Label>
+										<Label fx:id="lblDateTry" text="Fecha">
+											<VBox.margin>
+												<Insets top="10.0" />
+											</VBox.margin>
+										</Label>
+										<Label fx:id="lblTimeTry" text="Hora">
 											<VBox.margin>
 												<Insets />
 											</VBox.margin>
-										</Button>
-									</children>
-									<BorderPane.margin>
-										<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-									</BorderPane.margin>
-								</VBox>
-							</right>
-							<center>
-								<HBox alignment="CENTER_LEFT" prefHeight="266.0" prefWidth="468.0" BorderPane.alignment="CENTER">
-									<children>
-										<VBox prefHeight="415.0" prefWidth="100.0" spacing="10.0">
-											<children>
-												<Label fx:id="lblIdTry" text="id" />
-												<Label fx:id="lblTestTry" text="Test">
-													<padding>
-														<Insets top="10.0" />
-													</padding>
-												</Label>
-												<Label fx:id="lblDNITry" text="DNI Alumno">
-													<padding>
-														<Insets top="15.0" />
-													</padding>
-												</Label>
-											</children>
-											<padding>
-												<Insets bottom="10.0" left="10.0" right="10.0" top="20.0" />
-											</padding>
-										</VBox>
-										<VBox fx:id="vboxTry" prefHeight="395.0" prefWidth="165.0" spacing="10.0">
-											<children>
-												<TextField fx:id="txtIdTry" editable="false" prefHeight="27.0" prefWidth="298.0">
-													<padding>
-														<Insets top="10.0" />
-													</padding>
-												</TextField>
-												<TextField fx:id="txtTestTry" prefHeight="36.0" prefWidth="172.0" />
-												<ComboBox fx:id="cbDNITry" prefHeight="36.0" prefWidth="216.0" />
-											</children>
 											<padding>
 												<Insets top="10.0" />
 											</padding>
-										</VBox>
-										<VBox prefHeight="415.0" prefWidth="120.0" spacing="10.0">
-											<children>
-												<Label fx:id="lblDateTry" text="Fecha" />
-												<Label fx:id="lblTimeTry" text="Hora">
-													<VBox.margin>
-														<Insets />
-													</VBox.margin>
-													<padding>
-														<Insets top="10.0" />
-													</padding>
-												</Label>
-												<Label fx:id="lblResultTry" text="Resultado">
-													<padding>
-														<Insets top="10.0" />
-													</padding>
-												</Label>
-											</children>
-											<padding>
-												<Insets bottom="10.0" left="10.0" right="10.0" top="20.0" />
-											</padding>
-										</VBox>
-										<VBox prefHeight="395.0" prefWidth="165.0" spacing="10.0">
-											<children>
-												<DatePicker fx:id="txtDateTry" />
-												<TextField fx:id="txtTimeTry" />
-												<TextField fx:id="txtResTry" prefHeight="27.0" prefWidth="298.0">
-													<VBox.margin>
-														<Insets />
-													</VBox.margin>
-												</TextField>
-											</children>
+										</Label>
+										<Label fx:id="lblResultTry" text="Resultado">
 											<padding>
 												<Insets top="10.0" />
 											</padding>
-										</VBox>
-									</children>
+										</Label>
+									</VBox>
+									<VBox fx:id="vboxTry" prefHeight="134.0" prefWidth="199.0" spacing="10.0">
+										<padding>
+											<Insets top="10.0" />
+										</padding>
+										<TextField fx:id="txtIdTry" disable="true" editable="false" prefHeight="27.0" prefWidth="298.0">
+											<padding>
+												<Insets top="10.0" />
+											</padding>
+										</TextField>
+										<TextField fx:id="txtTestTry" editable="false" prefHeight="27.0" prefWidth="298.0" promptText="Introduce test del intento..">
+											<padding>
+												<Insets top="10.0" />
+											</padding>
+										</TextField>
+										<TextField fx:id="txtDNITry" promptText="Introduce nombre del alumno..." />
+										<DatePicker fx:id="txtDateTry" prefHeight="31.0" prefWidth="199.0" promptText="Introduce fecha..." />
+										<TextField fx:id="txtTimeTry" promptText="Introduce hora (HH:MM:SS)" />
+										<TextField fx:id="txtResTry" prefHeight="27.0" prefWidth="172.0" promptText="Introduce resultado (A;B;C;D;E;)">
+											<VBox.margin>
+												<Insets />
+											</VBox.margin>
+										</TextField>
+									</VBox>
+									<VBox prefHeight="246.0" prefWidth="305.0" spacing="10.0">
+										<padding>
+											<Insets top="10.0" />
+										</padding>
+										<HBox fx:id="hboxTry" prefHeight="232.0" prefWidth="285.0">
+											<VBox.margin>
+												<Insets bottom="10.0" left="20.0" />
+											</VBox.margin>
+										</HBox>
+									</VBox>
 								</HBox>
-							</center>
-							<StackPane.margin>
-								<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-							</StackPane.margin>
-						</BorderPane>
-					</children></StackPane>
-			</content>
-		</Tab>
-		<StackPane.margin>
-			<Insets />
-		</StackPane.margin>
-	</TabPane>
-	<Button fx:id="btnLogo" onAction="#mostrarMenu" styleClass="round-button" StackPane.alignment="TOP_RIGHT" />
+							</VBox>
+						</center>
+						<StackPane.margin>
+							<Insets />
+						</StackPane.margin>
+						<left>
+							<VBox alignment="CENTER" prefHeight="268.0" prefWidth="201.0" BorderPane.alignment="TOP_CENTER">
+								<BorderPane.margin>
+									<Insets bottom="10.0" left="10.0" right="10.0" />
+								</BorderPane.margin>
+								<Label styleClass="bold-label" text="Intentos guardados:">
+									<VBox.margin>
+										<Insets bottom="10.0" />
+									</VBox.margin>
+								</Label>
+								<ListView fx:id="listViewIntentos" prefHeight="175.0" prefWidth="171.0" VBox.vgrow="ALWAYS">
+									<VBox.margin>
+										<Insets bottom="10.0" left="15.0" right="15.0" />
+									</VBox.margin>
+								</ListView>
+								<Button fx:id="btnEditarIntentos" contentDisplay="CENTER" prefHeight="35.0" prefWidth="171.0" text="_Editar" textAlignment="CENTER">
+									<VBox.margin>
+										<Insets />
+									</VBox.margin>
+								</Button>
+							</VBox>
+						</left>
+					</BorderPane>
+				</StackPane>
+			</Tab>
+		</TabPane>
+	</VBox>
+	<Pane pickOnBounds="false">
+		<Button fx:id="btnHelp" layoutX="787.0" layoutY="102.0" styleClass="rounded-button" text="?" />
+	</Pane>
 </StackPane>

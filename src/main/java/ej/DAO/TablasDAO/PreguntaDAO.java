@@ -10,16 +10,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class PreguntaDAO extends AbstractDAO<Pregunta> {
-
+    
     public PreguntaDAO(Connection connection) {
         super(connection);
     }
-
+    
     @Override
     protected String getTableName() {
         return "pregunta";
     }
-
+    
     @Override
     protected Pregunta mapRowToEntity(ResultSet rs) throws SQLException {
         Pregunta pregunta = new Pregunta();
@@ -27,19 +27,21 @@ public class PreguntaDAO extends AbstractDAO<Pregunta> {
         Test test = new TestDAO(connection).findById(rs.getInt("idtest"));
         pregunta.setTest(test);
         pregunta.setEnunciado(rs.getString("enunciado"));
+        pregunta.setTitulo(rs.getString("titulo"));
         return pregunta;
     }
-
+    
     @Override
     public boolean insert(Pregunta pregunta) {
-        String sql = "INSERT INTO pregunta (idtest, enunciado) VALUES (?, ?)";
+        String sql = "INSERT INTO pregunta (idtest, enunciado, titulo) VALUES (?, ?, ?)";
         boolean result = false;
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, pregunta.getTest().getId());
             stmt.setString(2, pregunta.getEnunciado());
-
-                int rowsAffected = stmt.executeUpdate();
-
+            stmt.setString(3, pregunta.getTitulo());
+            
+            int rowsAffected = stmt.executeUpdate();
+            
             if (rowsAffected > 0) {
                 System.out.println("Pregunta insertada correctamente.");
                 result = true;
@@ -52,18 +54,19 @@ public class PreguntaDAO extends AbstractDAO<Pregunta> {
         }
         return result;
     }
-
+    
     @Override
     public boolean update(Pregunta pregunta) {
-        String sql = "UPDATE pregunta SET idtest = ?, enunciado = ? WHERE id = ?";
+        String sql = "UPDATE pregunta SET idtest = ?, enunciado = ?, titulo = ? WHERE id = ?";
         boolean result = false;
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, pregunta.getTest().getId());
             stmt.setString(2, pregunta.getEnunciado());
-            stmt.setInt(3, pregunta.getId());
-
+            stmt.setString(3, pregunta.getTitulo());
+            stmt.setInt(4, pregunta.getId());
+            
             int rowsAffected = stmt.executeUpdate();
-
+            
             if (rowsAffected > 0) {
                 System.out.println("Pregunta actualizada correctamente.");
                 result = true;
@@ -76,17 +79,16 @@ public class PreguntaDAO extends AbstractDAO<Pregunta> {
         }
         return result;
     }
-
-
+    
     @Override
     public boolean delete(int id) {
         String sql = "DELETE FROM pregunta WHERE id = ?";
         boolean result = false;
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, id);
-
+            
             int rowsAffected = stmt.executeUpdate();
-
+            
             if (rowsAffected > 0) {
                 System.out.println("Pregunta con ID " + id + " ha sido eliminado correctamente.");
                 result = true;

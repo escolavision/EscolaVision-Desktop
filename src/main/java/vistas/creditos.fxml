@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.layout.StackPane?>
+
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane prefWidth="325.0" prefHeight="10.0">
+<StackPane prefHeight="10.0" prefWidth="325.0" stylesheets="@../styles/styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
     <VBox alignment="CENTER" spacing="20" style="-fx-padding: 20px; -fx-background-color: #AED6F1;">
-        <Label text="EscolaVision - Desktop" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-underline: true;"/>
-        <Label text="Desarrolladores y Diseñadores:" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
-        <Label text="• Adrián Ruiz" style="-fx-font-size: 14px;"/>
-        <Label text="• Ismael Torres" style="-fx-font-size: 14px;"/>
-        <Label text="Colaboradores:" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
-        <Label text="• Jose María Molina" style="-fx-font-size: 14px;"/>
-        <Label text="• Maria Isabel Torres" style="-fx-font-size: 14px;"/>
-        <Label text="Gracias por utilizar nuestra aplicación." style="-fx-font-size: 14px;"/>
+        <Label style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-underline: true;" text="EscolaVision - Desktop" />
+        <Label style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Desarrolladores y Diseñadores:" />
+        <Label style="-fx-font-size: 14px;" text="• Adrián Ruiz" />
+        <Label style="-fx-font-size: 14px;" text="• Ismael Torres" />
+        <Label style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Colaboradores:" />
+        <Label style="-fx-font-size: 14px;" text="• Jose María Molina" />
+        <Label style="-fx-font-size: 14px;" text="• Maria Isabel Torres" />
+        <Label style="-fx-font-size: 14px;" text="Gracias por utilizar nuestra aplicación." />
     </VBox>
 </StackPane>

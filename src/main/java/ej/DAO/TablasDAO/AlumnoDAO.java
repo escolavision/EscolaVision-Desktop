@@ -113,4 +113,26 @@ public class AlumnoDAO extends AbstractDAO<Alumno> {
         }
         return result;
     }
+
+    public Alumno buscarAlumnoPorNombreYApellidos(String nombre, String apellidos) {
+        // Usamos una consulta que combine las condiciones de nombre y apellidos
+        String sql = "SELECT * FROM alumno WHERE nombre = ? AND apellidos = ?";
+        Alumno alumno = null;
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            // Establecemos los valores para nombre y apellidos
+            stmt.setString(1, nombre);
+            stmt.setString(2, apellidos);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    alumno = mapRowToEntity(rs);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return alumno;
+    }
 }

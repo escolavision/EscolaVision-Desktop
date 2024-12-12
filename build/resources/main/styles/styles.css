@@ -18,7 +18,7 @@
     -fx-font-weight: normal;
 }
 
-.text-field, .password-field, .combo-box, .text-area {
+.text-field, .password-field, .combo-box, .text-area, .list-view {
     -fx-font-size: 13px;
     -fx-padding: 5;
     -fx-background-color: white;
@@ -42,6 +42,17 @@
     -fx-background-size: cover;
 }
 
+.round-button-help {
+    -fx-background-radius: 50%;
+    -fx-min-width: 40px;
+    -fx-min-height: 40px;
+    -fx-max-width: 40px;
+    -fx-max-height: 40px;
+}
+
+#miStackPane{
+    -fx-background-color: #DDDDDD;
+}
 .tab-pane .tab {
     -fx-background-color: #4A90E2;
     -fx-padding: 5 10;
@@ -73,6 +84,11 @@
     -fx-border-color: transparent;
 }
 
-.validation-error .error-indicator {
-    -fx-shape: null;  /* Remove the error triangle */
+.bold-label {
+    -fx-font-weight: bold;
+}
+
+.rounded-button {
+    -fx-background-radius: 30;
+    -fx-border-radius: 30;
 }

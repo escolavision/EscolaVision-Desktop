@@ -4,7 +4,6 @@ import ej.DAO.AbstractDAO;
 import ej.Tablas.Alumno;
 import ej.Tablas.Intentos;
 import ej.Tablas.Test;
-
 import java.sql.*;
 
 public class IntentosDAO extends AbstractDAO<Intentos> {

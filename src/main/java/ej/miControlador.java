@@ -6,30 +6,39 @@ import ej.Tablas.*;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.geometry.Side;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.controlsfx.control.textfield.TextFields;
 import org.controlsfx.validation.*;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.category.DefaultCategoryDataset;
 
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
@@ -42,6 +51,7 @@ import java.io.*;
 import java.net.URL;
 import java.sql.*;
 import java.util.*;
+import java.util.List;
 
 import static java.lang.System.exit;
 
@@ -49,10 +59,10 @@ public class miControlador implements Initializable {
 
     @FXML
     private Button btnClearTest, btnClearQuest, btnClearAlum, btnClearProf, btnClearTry, btnLogo,
-            btnClearAr, btnDelTest, btnDelQuest, btnDelAlum, btnDelProf, btnDelTry, btnDelAr,
-            btnLogin, btnSaveTest, btnSaveQuest, btnSaveAlum, btnSaveProf, btnSaveTry, btnSaveAr,
-            btnClearPxA, btnDelPxA, btnSavePxA, btnEditarTest, btnEditarPreguntas, btnEditarAlumnos,
-            btnEditarProfesores, btnEditarArea, btnEditarPxA, btnEditarIntentos;
+            btnDelTest, btnDelQuest, btnDelAlum, btnDelProf, btnDelTry, btnLogin, btnSaveTest,
+            btnSaveQuest, btnSaveAlum, btnSaveProf, btnSaveTry, btnClearPxA, btnDelPxA, btnSavePxA,
+            btnEditarTest, btnEditarPreguntas, btnEditarAlumnos, btnEditarProfesores, btnEditarArea,
+            btnEditarPxA, btnEditarIntentos, btnHelp;
 
     @FXML
     private ListView<String> listViewAlumnos, listViewArea, listViewIntentos, listViewPreguntas,
@@ -62,7 +72,10 @@ public class miControlador implements Initializable {
     private CheckBox chkProf;
 
     @FXML
-    private ImageView imglogo, imgViewFoto1, imgViewPicAlum, imgViewPicArea, imageViewLimpiar;
+    private ImageView imglogo, imgViewFoto1, imgViewPicAlum, imgViewPicArea, imgDelTest, imgDelQuest,
+            imgDelAlum, imgDelProf, imgDelAr, imgDelPxA, imgDelTry, imgViewlogIn, imgClearTest, imgClearQuest,
+            imgClearAlum, imgClearProf, imgClearPxA, imgClearAr, imgClearTry, imgSaveTest, imgSaveQuest,
+            imgSaveAlum, imgSaveProf, imgSavePxA, imgSaveAr, imgSaveTry;
 
     @FXML
     private Tab tabAlum, tabAr, tabHome, tabProf, tabPxA, tabQuest, tabTest, tabTr;
@@ -71,24 +84,32 @@ public class miControlador implements Initializable {
     private TabPane tabPane;
 
     @FXML
-    private TextField txtDNIAlm, txtDNIProf, txtIdAlm, txtIdArea, txtTestTry,
+    private TextField txtDNIAlm, txtDNIProf, txtIdAlm, txtIdArea, txtTestTry, txtAreaPxA, txtQuestPxA,
             txtIdProf, txtIdQuest, txtIdTest, txtIdTry, txtNameAlm, txtNameArea, txtNameProf, txtResTry,
-            txtSurnameAlm, txtSurnameProf, txtTestName, txtTimeTry, txtUser, txtIdPxA, txtTestQuest;
+            txtSurnameAlm, txtSurnameProf,  txtTimeTry, txtUser, txtIdPxA, txtDNITry, txtTestQuest, txtAreaProf,
+            txtDNIProfAlm, txtTituloQuest;
 
     @FXML
-    private TextArea txtDescripArea, txtEnunQuest, txtEnumPxA;
+    private TextArea txtDescripArea, txtEnunQuest,txtTestName, txtEnumPxA;
 
     @FXML
     private PasswordField txtPassword, txtPasswordAlm, txtPasswordProf;
 
     @FXML
-    private ComboBox<String> cbAreaProf, cbAreaPxA, cbDNITry, cbDNIProfAlm, cbIdQuestPxA;
-
-    @FXML
     private DatePicker txtDateTry;
+    
+    @FXML
+    private HBox hbHeader, hboxTry;
 
     @FXML
-    private VBox vboxQuest, vboxTry;
+    private VBox vboxGraficTest;
+
+    @FXML
+    private Label lblEscolavisionDesktop;
+    
+    @FXML
+    private StackPane miStackPane;
+
 
     private AlumnoDAO alumnoDAO;
     private TestDAO testDAO;
@@ -102,7 +123,7 @@ public class miControlador implements Initializable {
     private final Map<String, ListView<String>> listViewMap = new HashMap<>();
     private final ListView<String> listViewDesplegableQuest = new ListView<>();
     private final ListView<String> listViewDesplegableTry = new ListView<>();
-    private Map<Tab, Button> tabToButtonMap = new HashMap<>();
+    private final Map<Tab, Button> tabToButtonMap = new HashMap<>();
 
     public miControlador() throws IOException {
     }
@@ -113,7 +134,43 @@ public class miControlador implements Initializable {
         inicializarConexion();
         inicializarLogin();
         inicializarDAO();
+        inicializarImagenes();
         inicializarTabToButtonMap();
+    }
+    
+    private void inicializarImagenes() {
+        double imageSize = 20.0;
+        
+        setImageWithSize(imgDelTest, "delete.png", imageSize, imageSize);
+        setImageWithSize(imgDelQuest, "delete.png", imageSize, imageSize);
+        setImageWithSize(imgDelAlum, "delete.png", imageSize, imageSize);
+        setImageWithSize(imgDelProf, "delete.png", imageSize, imageSize);
+        setImageWithSize(imgDelAr, "delete.png", imageSize, imageSize);
+        setImageWithSize(imgDelPxA, "delete.png", imageSize, imageSize);
+        setImageWithSize(imgDelTry, "delete.png", imageSize, imageSize);
+        setImageWithSize(imgViewlogIn, "logIn.png", imageSize, imageSize);
+        setImageWithSize(imgClearTest, "clear.png", imageSize, imageSize);
+        setImageWithSize(imgClearQuest, "clear.png", imageSize, imageSize);
+        setImageWithSize(imgClearAlum, "clear.png", imageSize, imageSize);
+        setImageWithSize(imgClearProf, "clear.png", imageSize, imageSize);
+        setImageWithSize(imgClearAr, "clear.png", imageSize, imageSize);
+        setImageWithSize(imgClearPxA, "clear.png", imageSize, imageSize);
+        setImageWithSize(imgClearTry, "clear.png", imageSize, imageSize);
+        setImageWithSize(imgSaveTest, "save.png", imageSize, imageSize);
+        setImageWithSize(imgSaveQuest, "save.png", imageSize, imageSize);
+        setImageWithSize(imgSaveAlum, "save.png", imageSize, imageSize);
+        setImageWithSize(imgSaveProf, "save.png", imageSize, imageSize);
+        setImageWithSize(imgSaveAr, "save.png", imageSize, imageSize);
+        setImageWithSize(imgSavePxA, "save.png", imageSize, imageSize);
+        setImageWithSize(imgSaveTry, "save.png", imageSize, imageSize);
+    }
+    
+    private void setImageWithSize(ImageView imageView, String imagePath, double width, double height) {
+        Image image = new Image(imagePath);
+        imageView.setImage(image);
+        imageView.setFitWidth(width);
+        imageView.setFitHeight(height);
+        imageView.setPreserveRatio(true);
     }
 
     private void inicializarTabToButtonMap() {
@@ -125,6 +182,7 @@ public class miControlador implements Initializable {
         tabToButtonMap.put(tabPxA, btnEditarPxA);
         tabToButtonMap.put(tabTr, btnEditarIntentos);
     }
+
     private void inicializarMap() {
         listViewMap.put("alumno", listViewAlumnos);
         listViewMap.put("profesor", listViewProfesores);
@@ -147,7 +205,7 @@ public class miControlador implements Initializable {
         if (conexion != null) {
             imglogo.setImage(new Image("escolavision.png"));
             pantallaPrincipal();
-            inicializarEventos();
+            inicializarEventosYValidadores();
         }
     }
 
@@ -169,11 +227,13 @@ public class miControlador implements Initializable {
         tabPane.getTabs().remove(tabPxA);
         tabPane.getTabs().remove(tabTest);
         tabPane.getTabs().remove(tabTr);
-        btnLogo.setVisible(false);
-        btnLogo.setManaged(false);
+        btnHelp.setVisible(false);
+        btnLogo.setVisible(true);
+        btnLogo.setManaged(true);
     }
 
     private void rolAdmin() {
+        tabPane.getTabs().remove(tabHome);
         tabPane.getTabs().add(tabTest);
         tabPane.getTabs().add(tabQuest);
         tabPane.getTabs().add(tabAlum);
@@ -181,31 +241,32 @@ public class miControlador implements Initializable {
         tabPane.getTabs().add(tabAr);
         tabPane.getTabs().add(tabPxA);
         tabPane.getTabs().add(tabTr);
-        tabPane.getTabs().remove(tabHome);
         btnLogo.setVisible(true);
         btnLogo.setManaged(true);
+        btnHelp.setVisible(true);
     }
 
     private void rolAlumno() {
         tabPane.getTabs().add(tabAlum);
-        tabPane.getTabs().add(tabPxA);
         tabPane.getTabs().add(tabTr);
         tabPane.getTabs().remove(tabHome);
         btnLogo.setVisible(true);
         btnLogo.setManaged(true);
+        btnHelp.setVisible(true);
     }
 
     private void rolProfesor() {
         tabPane.getTabs().add(tabAlum);
         tabPane.getTabs().add(tabProf);
-        tabPane.getTabs().add(tabPxA);
         tabPane.getTabs().add(tabTr);
         tabPane.getTabs().remove(tabHome);
         btnLogo.setVisible(true);
         btnLogo.setManaged(true);
+        btnHelp.setVisible(true);
     }
 
-    private void inicializarEventos() {
+
+        private void inicializarEventosYValidadores() {
 
         btnLogin.setOnAction(e -> login());
 
@@ -215,46 +276,63 @@ public class miControlador implements Initializable {
             }
         });
 
+        //ANIMACION
         tabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldTab, newTab) -> {
             if (newTab != null) {
-                Button botonEditar = tabToButtonMap.get(oldTab);
-                // cambio tap a tap
+                ProgressIndicator progressIndicator = new ProgressIndicator();
+                progressIndicator.setPrefSize(70, 70);
+                
+                Region background = new Region();
+                background.setStyle("-fx-background-color: rgba(174,214,241,0.8);");
+                background.setPrefSize(miStackPane.getWidth(), miStackPane.getHeight());
+                
+                StackPane loadingPane = new StackPane();
+                loadingPane.getChildren().addAll(background, progressIndicator);
+                StackPane.setAlignment(progressIndicator, Pos.CENTER);
+                
+                javafx.application.Platform.runLater(() -> miStackPane.getChildren().add(loadingPane));
+                
+                long startTime = System.currentTimeMillis();
+                
+                new Thread(() -> {
+                    try {
+                        limpiar(newTab);
+                        cargar(newTab);
+                        cargarDatos(newTab);
 
-                /*if (botonEditar != null && botonEditar.getText().equals("Cancelar")) {
-                    tabPane.getSelectionModel().select(oldTab);
-
-                    Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION);
-                    confirmacion.setTitle("Confirmación de cambio de pestaña");
-                    confirmacion.setHeaderText("¿Está seguro de que desea cambiar de pestaña?");
-                    confirmacion.setContentText("Se perderán todos los datos no guardados.");
-
-                    Optional<ButtonType> resultado = confirmacion.showAndWait();
-
-                    if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
-                            tabPane.getSelectionModel().select(newTab);
-                            limpiar(newTab);
-                            cargar(newTab);
-                            cargarComboBox(newTab);
+                        long elapsedTime = System.currentTimeMillis() - startTime;
+                        if (elapsedTime < 800) {
+                            Thread.sleep(800 - elapsedTime);
+                        }
+                        
+                        javafx.application.Platform.runLater(() -> miStackPane.getChildren().remove(loadingPane));
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                } else {*/
-                    limpiar(newTab);
-                    cargar(newTab);
-                    cargarComboBox(newTab);
-                //}
+                }).start();
             }
         });
 
-
-
-
-        cbIdQuestPxA.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                if (!newValue.trim().isEmpty()) {
-                    Pregunta pregunta = buscarPreguntaPorId(Integer.parseInt(newValue));
-                    if (pregunta != null) {
-                        txtEnumPxA.setText(pregunta.getEnunciado());
+        txtQuestPxA.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null && !newValue.trim().isEmpty()) {
+                try {
+                    String[] parts = newValue.trim().split("\\s+");
+                    if (parts.length > 1) {
+                        int id = Integer.parseInt(parts[1]);
+                        Pregunta pregunta = buscarPreguntaPorId(id);
+                        if (pregunta != null) {
+                            txtEnumPxA.setText(pregunta.getEnunciado());
+                        } else {
+                            txtEnumPxA.setText("");
+                        }
+                    } else {
+                        txtEnumPxA.setText("");
                     }
+                } catch (NumberFormatException e) {
+                    txtEnumPxA.setText("");
                 }
+            } else {
+                txtEnumPxA.setText("");
             }
         });
 
@@ -262,40 +340,50 @@ public class miControlador implements Initializable {
         listViewMap.forEach((tipo, listView) -> listView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 comprobarEditar(tipo);
+                String[] parts = newValue.trim().split("\\s+", 2);
                 switch (tipo) {
                     case "test": {
-                        cambiarBotonEditar(btnEditarTest, "Editar", "test");
-                        cargarTest(newValue);
+                        cambiarBotonEditar(btnSaveTest, "Actualizar", "test");
+                        if (parts.length > 1) {
+                            String[] parts2 = newValue.trim().split("\\s+");
+                            cambiarBotonEditar(btnEditarTest, "Editar", "test");
+                            cargarTestPartido(parts2[1]);
+                        }
                         break;
                     }
                     case "pregunta": {
+                        cambiarBotonEditar(btnSaveQuest, "Actualizar", "pregunta");
                         cambiarBotonEditar(btnEditarPreguntas, "Editar", "pregunta");
-                        cargarPregunta(newValue);
+                        cargarPregunta(parts[1]);
                         break;
                     }
                     case "alumno": {
+                        cambiarBotonEditar(btnSaveAlum, "Actualizar", "alumno");
                         cambiarBotonEditar(btnEditarAlumnos, "Editar", "alumno");
-                        cargarAlumno(newValue);
+                        cargarAlumno(parts[0],parts[1]);
                         break;
                     }
                     case "profesor": {
+                        cambiarBotonEditar(btnSaveProf, "Actualizar", "profesor");
                         cambiarBotonEditar(btnEditarProfesores, "Editar", "profesor");
-                        cargarProfesor(newValue);
+                        cargarProfesor(parts[0],parts[1]);
                         break;
                     }
                     case "area": {
-                        cambiarBotonEditar(btnEditarArea, "Editar", "area");
                         cargarArea(newValue);
                         break;
                     }
                     case "pxa": {
+                        cambiarBotonEditar(btnSavePxA, "Actualizar", "pxa");
+                        String[] parts2 = newValue.trim().split("\\s+");
                         cambiarBotonEditar(btnEditarPxA, "Editar", "pxa");
-                        cargarPxA(newValue);
+                        cargarPxA(parts2[3]);
                         break;
                     }
                     case "intentos": {
+                        cambiarBotonEditar(btnSaveTry, "Actualizar", "intentos");
                         cambiarBotonEditar(btnEditarIntentos, "Editar", "intentos");
-                        cargarIntento(newValue);
+                        cargarIntento(parts[1]);
                         break;
                     }
                     default: {
@@ -306,13 +394,63 @@ public class miControlador implements Initializable {
             listViewDesplegableTry.setVisible(false);
         }));
 
+        //AYUDA
+        btnHelp.setOnAction(e -> {
+            String helpMessage = "";
+            switch (tabPane.getSelectionModel().getSelectedItem().getText()) {
+                case "Test" -> {
+                    helpMessage = "En esta sección puedes crear y modificar tests, asignándoles un nombre. También puedes ver y editar los tests guardados en el sistema.";
+                }
+                case "Preguntas" -> {
+                    helpMessage = "En esta sección puedes añadir y modificar preguntas, asignándoles un título, un enunciado, y asociándolas a un test específico. Además, puedes ver y editar las preguntas guardadas en el sistema.";
+                }
+                case "Alumnado" -> {
+                    helpMessage = "En esta sección puedes introducir y modificar los datos del alumno, incluyendo nombre, apellidos, DNI, clave de acceso, foto y el profesor asignado. También puedes ver y editar los alumnos guardados en el sistema.";
+                }
+                case "Profesorado" -> {
+                    helpMessage = "En esta sección puedes introducir y modificar los datos del profesor, incluyendo nombre, apellidos, DNI, área de especialización, clave de acceso y foto. También puedes ver y editar los profesores guardados en el sistema.";
+                }
+                case "Área" -> {
+                    helpMessage = "En esta sección puedes consultar las áreas de especialización disponibles. No se permite la modificación de las áreas guardadas en el sistema.";
+                }
+                case "Pregunta x Área" -> {
+                    helpMessage = "En esta sección puedes asociar y modificar preguntas al área correspondiente, facilitando su organización y asignación. También puedes ver y editar las asociaciones guardadas en el sistema.";
+                }
+                case "Intentos" -> {
+                    helpMessage = "En esta sección se muestran los intentos realizados por el alumno en cada test, incluyendo el nombre y apellidos del alumno, la fecha y hora de realización, y el resultado obtenido. Puedes ver y modificar los intentos guardados en el sistema.";
+                }
+                default -> {
+                }
+            }
+            Dialog<Void> dialog = new Dialog<>();
+            dialog.setTitle("Ayuda | EscolaVision Desktop");
+            dialog.setHeaderText("Información de la pestaña seleccionada");
+
+            Label helpLabel = new Label(helpMessage);
+            helpLabel.setStyle("-fx-text-alignment: justify;");
+            helpLabel.setWrapText(true);
+
+            VBox content = new VBox(10, helpLabel);
+            content.setPrefWidth(Region.USE_PREF_SIZE);
+            content.setMinHeight(Region.USE_PREF_SIZE);
+            content.setAlignment(javafx.geometry.Pos.CENTER);
+
+            dialog.getDialogPane().setContent(content);
+            Stage dialogStage = (Stage) dialog.getDialogPane().getScene().getWindow();
+            dialogStage.getIcons().add(new Image("escolavision.png"));
+            dialog.getDialogPane().getButtonTypes().addAll(javafx.scene.control.ButtonType.CLOSE);
+
+            dialog.showAndWait();
+        });
+
+        //EDITAR
 
         btnEditarTest.setOnAction(e -> {
             if (btnEditarTest.getText().equals("Editar") || btnEditarTest.getText().equals("_Editar")) {
                 cambiarBotonEditar(btnEditarTest, "Cancelar", "test");
             } else {
                 cambiarBotonEditar(btnEditarTest, "Editar", "test");
-                if(listViewTest.getSelectionModel().getSelectedItem() != null) {
+                if (listViewTest.getSelectionModel().getSelectedItem() != null) {
                     cargarTest(listViewTest.getSelectionModel().getSelectedItem());
                 }
             }
@@ -323,7 +461,7 @@ public class miControlador implements Initializable {
                 cambiarBotonEditar(btnEditarPreguntas, "Cancelar", "pregunta");
             } else {
                 cambiarBotonEditar(btnEditarPreguntas, "Editar", "pregunta");
-                if(listViewPreguntas.getSelectionModel().getSelectedItem() != null) {
+                if (listViewPreguntas.getSelectionModel().getSelectedItem() != null) {
                     cargarPregunta(listViewPreguntas.getSelectionModel().getSelectedItem());
                 }
             }
@@ -334,8 +472,10 @@ public class miControlador implements Initializable {
                 cambiarBotonEditar(btnEditarAlumnos, "Cancelar", "alumno");
             } else {
                 cambiarBotonEditar(btnEditarAlumnos, "Editar", "alumno");
-                if(listViewAlumnos.getSelectionModel().getSelectedItem() != null) {
-                    cargarAlumno(listViewAlumnos.getSelectionModel().getSelectedItem());
+                if (listViewAlumnos.getSelectionModel().getSelectedItem() != null) {
+                    String na = listViewAlumnos.getSelectionModel().getSelectedItem();
+                    String[] parts = na.trim().split(" ", 2);
+                    cargarAlumno(parts[0],parts[1]);
                 }
             }
         });
@@ -345,8 +485,10 @@ public class miControlador implements Initializable {
                 cambiarBotonEditar(btnEditarProfesores, "Cancelar", "profesor");
             } else {
                 cambiarBotonEditar(btnEditarProfesores, "Editar", "profesor");
-                if(listViewProfesores.getSelectionModel().getSelectedItem() != null){
-                    cargarProfesor(listViewProfesores.getSelectionModel().getSelectedItem());
+                if (listViewProfesores.getSelectionModel().getSelectedItem() != null) {
+                    String na = listViewProfesores.getSelectionModel().getSelectedItem();
+                    String[] parts = na.trim().split(" ", 2);
+                    cargarProfesor(parts[0],parts[1]);
                 }
             }
         });
@@ -356,7 +498,7 @@ public class miControlador implements Initializable {
                 cambiarBotonEditar(btnEditarArea, "Cancelar", "area");
             } else {
                 cambiarBotonEditar(btnEditarArea, "Editar", "area");
-                if(listViewArea.getSelectionModel().getSelectedItem() != null) {
+                if (listViewArea.getSelectionModel().getSelectedItem() != null) {
                     cargarArea(listViewArea.getSelectionModel().getSelectedItem());
                 }
             }
@@ -367,7 +509,7 @@ public class miControlador implements Initializable {
                 cambiarBotonEditar(btnEditarPxA, "Cancelar", "pxa");
             } else {
                 cambiarBotonEditar(btnEditarPxA, "Editar", "pxa");
-                if(listViewPxa.getSelectionModel().getSelectedItem() != null){
+                if (listViewPxa.getSelectionModel().getSelectedItem() != null) {
                     cargarPxA(listViewPxa.getSelectionModel().getSelectedItem());
                 }
             }
@@ -378,7 +520,7 @@ public class miControlador implements Initializable {
                 cambiarBotonEditar(btnEditarIntentos, "Cancelar", "intentos");
             } else {
                 cambiarBotonEditar(btnEditarIntentos, "Editar", "intentos");
-                if(listViewIntentos.getSelectionModel().getSelectedItem() != null) {
+                if (listViewIntentos.getSelectionModel().getSelectedItem() != null) {
                     cargarIntento(listViewIntentos.getSelectionModel().getSelectedItem());
                 }
             }
@@ -389,24 +531,21 @@ public class miControlador implements Initializable {
 
         btnClearTest.setOnAction(e -> {
             limpiar(tabTest);
-            cambiarBotonEditar(btnEditarTest, "Editar", "test");
             txtTestName.setEditable(true);
         });
 
         btnClearQuest.setOnAction(e -> {
             limpiar(tabQuest);
-            cambiarBotonEditar(btnEditarPreguntas, "Editar", "pregunta");
             txtTestQuest.setEditable(true);
             txtEnunQuest.setEditable(true);
         });
 
         btnClearAlum.setOnAction(e -> {
             limpiar(tabAlum);
-            cambiarBotonEditar(btnEditarAlumnos, "Editar", "alumno");
             txtNameAlm.setEditable(true);
             txtSurnameAlm.setEditable(true);
             txtDNIAlm.setEditable(true);
-            cbDNIProfAlm.setMouseTransparent(false);
+            txtDNIProfAlm.setMouseTransparent(false);
             txtPasswordAlm.setEditable(true);
             habilitarArrastrarYSoltar();
             agregarEventListenersParaSeleccionarImagen();
@@ -414,33 +553,23 @@ public class miControlador implements Initializable {
 
         btnClearProf.setOnAction(e -> {
             limpiar(tabProf);
-            cambiarBotonEditar(btnEditarProfesores, "Editar", "profesor");
             txtNameProf.setEditable(true);
             txtSurnameProf.setEditable(true);
             txtDNIProf.setEditable(true);
             txtPasswordProf.setEditable(true);
-            cbAreaProf.setMouseTransparent(false);
-        });
-
-        btnClearAr.setOnAction(e -> {
-            limpiar(tabAr);
-            cambiarBotonEditar(btnEditarArea, "Editar", "area");
-            txtNameArea.setEditable(true);
-            txtDescripArea.setEditable(true);
+            txtAreaProf.setMouseTransparent(false);
         });
 
         btnClearPxA.setOnAction(e -> {
             limpiar(tabPxA);
-            cambiarBotonEditar(btnEditarPxA, "Editar", "pxa");
-            cbAreaPxA.setMouseTransparent(false);
-            cbIdQuestPxA.setMouseTransparent(false);
+            txtAreaPxA.setMouseTransparent(false);
+            txtQuestPxA.setMouseTransparent(false);
         });
 
         btnClearTry.setOnAction(e -> {
             limpiar(tabTr);
-            cambiarBotonEditar(btnEditarIntentos, "Editar", "intentos");
             txtTestTry.setEditable(true);
-            cbDNITry.setMouseTransparent(false);
+            txtDNITry.setMouseTransparent(false);
             txtDateTry.setEditable(true);
             txtTimeTry.setEditable(true);
             txtResTry.setEditable(true);
@@ -450,66 +579,59 @@ public class miControlador implements Initializable {
 
         btnDelTest.setOnAction(e -> {
             if (!txtIdTest.getText().isEmpty()) borrar("test", txtIdTest.getText());
-            else mostrarAlerta(Alert.AlertType.ERROR, "Error","Error al borrar", "Debe seleccionar un test.");
+            else mostrarAlerta(Alert.AlertType.ERROR, "Error", "Error al borrar", "Debe seleccionar un test.");
 
         });
 
         btnDelQuest.setOnAction(e -> {
             if (!txtIdQuest.getText().isEmpty()) borrar("pregunta", txtIdQuest.getText());
-            else mostrarAlerta(Alert.AlertType.ERROR, "Error","Error al borrar", "Debe seleccionar una pregunta.");
+            else mostrarAlerta(Alert.AlertType.ERROR, "Error", "Error al borrar", "Debe seleccionar una pregunta.");
         });
 
         btnDelAlum.setOnAction(e -> {
             if (!txtIdAlm.getText().isEmpty()) borrar("alumno", txtIdAlm.getText());
-            else mostrarAlerta(Alert.AlertType.ERROR, "Error","Error al borrar", "Debe seleccionar un alumno.");
+            else mostrarAlerta(Alert.AlertType.ERROR, "Error", "Error al borrar", "Debe seleccionar un alumno.");
         });
 
         btnDelProf.setOnAction(e -> {
             if (!txtIdProf.getText().isEmpty()) borrar("profesor", txtIdProf.getText());
-            else mostrarAlerta(Alert.AlertType.ERROR, "Error","Error al borrar", "Debe seleccionar un profesor.");
-        });
-
-        btnDelAr.setOnAction(e -> {
-            if (!txtIdArea.getText().isEmpty()) borrar("area", txtIdArea.getText());
-            else mostrarAlerta(Alert.AlertType.ERROR, "Error","Error al borrar", "Debe seleccionar un area.");
+            else mostrarAlerta(Alert.AlertType.ERROR, "Error", "Error al borrar", "Debe seleccionar un profesor.");
         });
 
         btnDelPxA.setOnAction(e -> {
             if (!txtIdPxA.getText().isEmpty()) borrar("pxa", txtIdPxA.getText());
-            else mostrarAlerta(Alert.AlertType.ERROR, "Error","Error al borrar", "Debe seleccionar un PxA.");
+            else mostrarAlerta(Alert.AlertType.ERROR, "Error", "Error al borrar", "Debe seleccionar un PxA.");
         });
 
         btnDelTry.setOnAction(e -> {
             if (!txtIdTry.getText().isEmpty()) borrar("intentos", txtIdTry.getText());
-            else mostrarAlerta(Alert.AlertType.ERROR, "Error","Error al borrar", "Debe seleccionar un intento.");
+            else mostrarAlerta(Alert.AlertType.ERROR, "Error", "Error al borrar", "Debe seleccionar un intento.");
         });
 
-
+        //VALIDACIÓN
         ValidationSupport vSnombreTest = new ValidationSupport();
         vSnombreTest.registerValidator(txtTestName, false, Validator.createEmptyValidator("El nombre no puede estar vacío"));
-        //vSnombreTest.redecorate();
 
         ValidationSupport vSPregunta = new ValidationSupport();
-        vSPregunta.registerValidator(txtEnunQuest,false,  Validator.createEmptyValidator("El enunciado no puede estar vacío"));
+        vSPregunta.registerValidator(txtEnunQuest, false, Validator.createEmptyValidator("El enunciado no puede estar vacío"));
+        vSPregunta.registerValidator(txtTituloQuest, false, Validator.createEmptyValidator("El titulo no puede estar vacío"));
         vSPregunta.registerValidator(txtTestQuest, false, Validator.createEmptyValidator("Debe seleccionar un test"));
 
         ValidationSupport vSAlumno = new ValidationSupport();
-        vSAlumno.registerValidator(txtNameAlm,false,  Validator.createEmptyValidator("El nombre no puede estar vacío")); // Jueves 28
-        vSAlumno.registerValidator(txtSurnameAlm, false, Validator.createEmptyValidator("El apellido no puede estar vacío"));
-        vSAlumno.registerValidator(cbDNIProfAlm, false, Validator.createEmptyValidator("Debe seleccionar un DNI"));
+        vSAlumno.registerValidator(txtNameAlm, false, Validator.createEmptyValidator("El nombre no puede estar vacío"));         vSAlumno.registerValidator(txtSurnameAlm, false, Validator.createEmptyValidator("El apellido no puede estar vacío"));
+        vSAlumno.registerValidator(txtDNIProfAlm, false, Validator.createEmptyValidator("Debe seleccionar un Profesora"));
         vSAlumno.registerValidator(txtDNIAlm, false, Validator.createRegexValidator("El formato del DNI es inválido", "^\\d{8}[A-Za-z]$", Severity.ERROR));
-        vSAlumno.registerValidator(txtPasswordAlm,false,  Validator.createRegexValidator("""
+        vSAlumno.registerValidator(txtPasswordAlm, false, Validator.createRegexValidator("""
                 La contraseña debe tener al menos 8 caracteres,
                 incluyendo una mayúscula, una minúscula,
                 un número y un carácter especial
                 (@ $ ! % * ? & . - _ #).
                 """, "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&\\.\\-\\_\\#])[A-Za-z\\d@$!%*?&\\.\\-\\_\\#]{8,}$", Severity.ERROR));
-        //vSAlumno.redecorate();
 
         ValidationSupport vSProfesor = new ValidationSupport();
-        vSProfesor.registerValidator(txtNameProf,false,  Validator.createEmptyValidator("El nombre no puede estar vacío"));
-        vSProfesor.registerValidator(txtSurnameProf,false,  Validator.createEmptyValidator("El apellido no puede estar vacío"));
-        vSProfesor.registerValidator(cbAreaProf,false,  Validator.createEmptyValidator("Debe seleccionar un Area"));
+        vSProfesor.registerValidator(txtNameProf, false, Validator.createEmptyValidator("El nombre no puede estar vacío"));
+        vSProfesor.registerValidator(txtSurnameProf, false, Validator.createEmptyValidator("El apellido no puede estar vacío"));
+        vSProfesor.registerValidator(txtAreaProf, false, Validator.createEmptyValidator("Debe seleccionar un Area"));
         vSProfesor.registerValidator(txtDNIProf, false, Validator.createRegexValidator("El formato del DNI es inválido", "^\\d{8}[A-Za-z]$", Severity.ERROR));
         vSProfesor.registerValidator(txtPasswordProf, false, Validator.createRegexValidator("""
                 	La contraseña debe tener al menos 8 caracteres,
@@ -518,23 +640,14 @@ public class miControlador implements Initializable {
                 (@ $ ! % * ? & . - _ #).
                 """, "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&\\.\\-\\_\\#])[A-Za-z\\d@$!%*?&\\.\\-\\_\\#]{8,}$", Severity.ERROR));
 
-        ValidationSupport vSArea = new ValidationSupport();
-        vSArea.registerValidator(txtNameArea,false,  Validator.createEmptyValidator("El nombre no puede estar vacío"));
-        vSArea.registerValidator(txtDescripArea,false,  Validator.createEmptyValidator("La descripción no puede estar vacía"));
-
         ValidationSupport vSPxA = new ValidationSupport();
-        vSPxA.registerValidator(cbAreaPxA, false, Validator.createEmptyValidator("Debe seleccionar un area"));
-        vSPxA.registerValidator(cbIdQuestPxA,false,  Validator.createEmptyValidator("Debe seleccionar una pregunta"));
+        vSPxA.registerValidator(txtAreaPxA, false, Validator.createEmptyValidator("Debe seleccionar un area"));
+        vSPxA.registerValidator(txtQuestPxA, false, Validator.createEmptyValidator("Debe seleccionar una pregunta"));
 
         ValidationSupport vSIntentos = new ValidationSupport();
         vSIntentos.registerValidator(txtTestTry, false, Validator.createEmptyValidator("Debe seleccionar un test"));
-        vSIntentos.registerValidator(cbDNITry,false,  Validator.createEmptyValidator("Debe seleccionar un alumno"));
+        vSIntentos.registerValidator(txtDNITry, false, Validator.createEmptyValidator("Debe seleccionar un alumno"));
         vSIntentos.registerValidator(txtDateTry, false, Validator.createEmptyValidator("El formato de la fecha es incorrect"));
-		/*
-		vSProfesor.registerValidator(txtDateTry, Validator.createRegexValidator("""
-			Formato de fecha inválido. Use yyyy-MM-dd
-		""", "^(\\d{4})-(\\d{2})-(\\d{2})$", Severity.ERROR));
-		 */
         vSIntentos.registerValidator(txtTimeTry, false, Validator.createEmptyValidator("Debe seleccionar un test"));
         vSIntentos.registerValidator(txtResTry, false, Validator.createEmptyValidator("Debe seleccionar un test"));
 
@@ -544,7 +657,7 @@ public class miControlador implements Initializable {
             Collection<ValidationMessage> errores = resultado.getErrors();
 
             if (!errores.isEmpty()) {
-                mostrarAlerta(Alert.AlertType.ERROR,"Error", "Validación Fallida", "Por favor, corrige los errores antes de guardar.");
+                mostrarAlerta(Alert.AlertType.ERROR, "Error", "Datos incompletos o incorrectos", "Por favor, introduce un nombre para el test.");
 
                 ValidationMessage primerError = errores.iterator().next();
                 if (primerError.getTarget() instanceof Control control) {
@@ -556,16 +669,17 @@ public class miControlador implements Initializable {
             }
         });
 
-
         btnSaveQuest.setOnAction(e -> {
             ValidationResult resultado = vSPregunta.getValidationResult();
             Collection<ValidationMessage> errores = resultado.getErrors();
 
             if (!errores.isEmpty()) {
                 Alert alerta = new Alert(Alert.AlertType.ERROR);
-                alerta.setTitle("Error");
-                alerta.setHeaderText("Validación Fallida");
+                alerta.setTitle("Error | EscolaVision Desktop");
+                alerta.setHeaderText("Datos incompletos o incorrectos");
                 alerta.setContentText("Por favor, corrige los errores antes de guardar.");
+                Stage alertStage = (Stage) alerta.getDialogPane().getScene().getWindow();
+                alertStage.getIcons().add(new Image("escolavision.png"));
                 alerta.showAndWait();
 
                 ValidationMessage primerError = errores.iterator().next();
@@ -588,11 +702,6 @@ public class miControlador implements Initializable {
             btnClearProf.fire();
         });
 
-        btnSaveAr.setOnAction(e -> {
-            insertarYActualizar("area");
-            btnClearAr.fire();
-        });
-
         btnSavePxA.setOnAction(e -> {
             insertarYActualizar("pxa");
             btnClearPxA.fire();
@@ -611,40 +720,57 @@ public class miControlador implements Initializable {
         Platform.runLater(() -> {
             vSnombreTest.initInitialDecoration();
             vSPregunta.initInitialDecoration();
-            //vSAlumno.initInitialDecoration();
-            //vSProfesor.initInitialDecoration();
-            vSArea.initInitialDecoration();
-            //vSPxA.initInitialDecoration();
-            //vSIntentos.initInitialDecoration();
+            vSAlumno.initInitialDecoration();
+            vSProfesor.initInitialDecoration();
+            vSPxA.initInitialDecoration();
+            vSIntentos.initInitialDecoration();
         });
     }
-
 
     public void cambiarBotonEditar(Button boton, String textobtn, String tab) {
         boton.setText(textobtn);
         comprobarEditar(tab);
     }
 
+    public void cambiarBotonSave(Button boton, String textobtn, String tab) {
+        boton.setText(textobtn);
+        comprobarEditar(tab);
+    }
+
     private void cargarTest(String newValue) {
-        Test test = buscarTestPorNombre(newValue);
+        String[] parts2 = newValue.trim().split("\\s+");
+        Test test = buscarTestPorId(parts2[1]);
+        txtIdTest.setText("" + test.getId());
+        txtTestName.setText(test.getNombre());
+    }
+
+    private void cargarTestPartido(String newValue) {
+        Test test = buscarTestPorId(newValue);
         txtIdTest.setText("" + test.getId());
         txtTestName.setText(test.getNombre());
     }
 
     private void cargarPregunta(String newValue) {
-        Pregunta pregunta = buscarPreguntaPorId(Integer.parseInt(newValue));
+        Pregunta pregunta;
+        if(newValue.contains("Pregunta")){
+            String[] parts = newValue.trim().split(" ",2);
+            pregunta = buscarPreguntaPorId(Integer.parseInt(parts[1]));
+        }else{
+            pregunta = buscarPreguntaPorId(Integer.parseInt(newValue));
+        }
         txtIdQuest.setText("" + pregunta.getId());
         txtTestQuest.setText(pregunta.getTest().getNombre());
+        txtTituloQuest.setText(pregunta.getTitulo());
         txtEnunQuest.setText(pregunta.getEnunciado());
     }
 
-    private void cargarAlumno(String newValue) {
-        Alumno alumno = buscarAlumnoPorDni(newValue);
+    private void cargarAlumno(String nombre, String apellidos) {
+        Alumno alumno = buscarAlumnoPorNombreYApellidos(nombre, apellidos);
         txtIdAlm.setText("" + alumno.getId());
         txtNameAlm.setText(alumno.getNombre());
         txtSurnameAlm.setText(alumno.getApellidos());
         txtDNIAlm.setText(alumno.getDni());
-        cbDNIProfAlm.setValue(alumno.getProfesor().getDni());
+        txtDNIProfAlm.setText(alumno.getProfesor().getNombre() + " " + alumno.getProfesor().getApellidos());
         txtPasswordAlm.setText(alumno.getClaveaccesoalumno());
         if (!Objects.equals(alumno.getFoto(), "")) {
             imgViewPicAlum.setImage(base64ToImage(alumno.getFoto()));
@@ -653,14 +779,14 @@ public class miControlador implements Initializable {
         }
     }
 
-    private void cargarProfesor(String newValue) {
-        Profesor profesor = buscarProfesorPorDni(newValue);
+    private void cargarProfesor(String nombre, String apellidos) {
+        Profesor profesor = buscarProfesorPorNombreYApellidos(nombre,apellidos);
         txtIdProf.setText("" + profesor.getId());
         txtNameProf.setText(profesor.getNombre());
         txtSurnameProf.setText(profesor.getApellidos());
         txtDNIProf.setText(profesor.getDni());
         txtPasswordProf.setText(profesor.getClaveaccesoprof());
-        cbAreaProf.setValue(profesor.getArea().getNombre());
+        txtAreaProf.setText(profesor.getArea().getNombre());
         if (!Objects.equals(profesor.getFoto(), "")) {
             imgViewFoto1.setImage(base64ToImage(profesor.getFoto()));
         } else {
@@ -669,7 +795,8 @@ public class miControlador implements Initializable {
     }
 
     private void cargarArea(String newValue) {
-        Area area = buscarAreaPorNombre(newValue);
+        String[] parts = newValue.trim().split("\\s+", 4);
+        Area area = buscarAreaPorNombre(parts[3]);
         txtNameArea.setText(area.getNombre());
         txtDescripArea.setText(area.getDescripcion());
         txtIdArea.setText("" + area.getId());
@@ -681,21 +808,139 @@ public class miControlador implements Initializable {
     }
 
     private void cargarPxA(String newValue) {
-        PxA pxa = buscarPxAPorId(Integer.parseInt(newValue));
+        PxA pxa;
+        if(newValue.contains("Pregunta")){
+            String[] parts = newValue.trim().split("\\s+",4);
+            pxa = buscarPxAPorId(Integer.parseInt(parts[3]));
+        }else{
+            pxa = buscarPxAPorId(Integer.parseInt(newValue));
+        }
+
         txtIdPxA.setText("" + pxa.getId());
-        cbAreaPxA.setValue(pxa.getArea().getNombre());
-        cbIdQuestPxA.setValue("" + pxa.getPregunta().getId());
+        txtAreaPxA.setText(pxa.getArea().getNombre());
+        txtQuestPxA.setText("Pregunta " + pxa.getPregunta().getId());
         txtEnumPxA.setText(pxa.getPregunta().getEnunciado());
     }
 
     private void cargarIntento(String newValue) {
-        Intentos intento = buscarIntentoPorId(Integer.parseInt(newValue));
-        txtIdTry.setText("" + intento.getId());
-        txtTestTry.setText(intento.getTest().getNombre());
-        cbDNITry.setValue(intento.getAlumno().getDni());
-        txtDateTry.setValue(intento.getFecha());
-        txtTimeTry.setText(intento.getHora());
-        txtResTry.setText(intento.getResultados());
+        ProgressIndicator progressIndicator = new ProgressIndicator();
+        progressIndicator.setPrefSize(70, 70);
+
+        Region background = new Region();
+        background.setStyle("-fx-background-color: rgba(174,214,241,0.8);");
+        background.setPrefSize(miStackPane.getWidth(), miStackPane.getHeight());
+
+        StackPane loadingPane = new StackPane();
+        loadingPane.getChildren().addAll(background, progressIndicator);
+        StackPane.setAlignment(progressIndicator, Pos.CENTER);
+
+        javafx.application.Platform.runLater(() -> miStackPane.getChildren().add(loadingPane));
+
+        long startTime = System.currentTimeMillis();
+
+        new Thread(() -> {
+            try {
+                Intentos intento;
+                if(newValue.contains("Intento")){
+                    String[] parts = newValue.trim().split("\\s+",2);
+                    intento = buscarIntentoPorId(Integer.parseInt(parts[1]));
+                }else{
+                    intento = buscarIntentoPorId(Integer.parseInt(newValue));
+                }
+
+                javafx.application.Platform.runLater(() -> {
+                    txtIdTry.setText(String.valueOf(intento.getId()));
+                    txtTestTry.setText(intento.getTest().getNombre());
+                    txtDNITry.setText(intento.getAlumno().getNombre() + " " + intento.getAlumno().getApellidos());
+                    txtDateTry.setValue(intento.getFecha());
+                    txtTimeTry.setText(intento.getHora());
+                    txtResTry.setText(intento.getResultados());
+
+                    String[] valores = intento.getResultados().split(";");
+                    String[] areas = {"AREA 1", "AREA 2", "AREA 3", "AREA 4", "AREA 5"};
+
+                    DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+                    for (int i = 0; i < valores.length; i++) {
+                        dataset.addValue(Double.parseDouble(valores[i]), "Resultados", areas[i]);
+                    }
+
+                    JFreeChart chart = ChartFactory.createBarChart(
+                            "Resultados por Área",
+                            "Áreas",
+                            "Resultados",
+                            dataset,
+                            PlotOrientation.VERTICAL,
+                            true,
+                            true,
+                            false
+                    );
+
+                    BufferedImage bufferedImage = chart.createBufferedImage(800, 600);
+
+                    Image fxImage = convertToFXImage(bufferedImage);
+
+                    ImageView imageView = new ImageView(fxImage);
+
+                    imageView.fitWidthProperty().bind(hboxTry.widthProperty());
+                    imageView.fitHeightProperty().bind(hboxTry.heightProperty());
+                    imageView.setPreserveRatio(true);
+
+                    hboxTry.getChildren().clear();
+                    hboxTry.setAlignment(Pos.CENTER);
+                    hboxTry.getChildren().add(imageView);
+
+                    imageView.setOnMouseEntered(event -> {
+                        imageView.setCursor(javafx.scene.Cursor.HAND);
+                        imageView.setEffect(new DropShadow(20, Color.GRAY));
+                    });
+
+                    imageView.setOnMouseExited(event -> {
+                        imageView.setCursor(javafx.scene.Cursor.DEFAULT);
+                        imageView.setEffect(null);
+                    });
+
+                    imageView.setOnMouseClicked(event -> {
+                        Stage imageStage = new Stage();
+                        imageStage.setTitle("Gráfico Ampliado | EscolaVision Desktop");
+                        imageStage.getIcons().add(new Image("escolavision.png"));
+
+                        ImageView expandedImageView = new ImageView(fxImage);
+                        expandedImageView.setPreserveRatio(true);
+                        expandedImageView.setFitWidth(800);
+                        expandedImageView.setFitHeight(600);
+
+                        Scene scene = new Scene(new StackPane(expandedImageView), 800, 600);
+
+                        imageStage.setScene(scene);
+                        imageStage.show();
+                    });
+                });
+
+                long elapsedTime = System.currentTimeMillis() - startTime;
+                if (elapsedTime < 800) {
+                    Thread.sleep(800 - elapsedTime);
+                }
+
+                javafx.application.Platform.runLater(() -> miStackPane.getChildren().remove(loadingPane));
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                javafx.application.Platform.runLater(() -> miStackPane.getChildren().remove(loadingPane));
+            }
+        }).start();
+    }
+
+    private Image convertToFXImage(BufferedImage bufferedImage) {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        try {
+            ImageIO.write(bufferedImage, "png", byteArrayOutputStream);
+            byteArrayOutputStream.flush();
+            byte[] byteArray = byteArrayOutputStream.toByteArray();
+            return new Image(new ByteArrayInputStream(byteArray));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     private void borrar(String tipo, String id) {
@@ -704,8 +949,10 @@ public class miControlador implements Initializable {
 
         if (dao != null && tab != null) {
             Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION);
-            confirmacion.setTitle("Confirmación de eliminación");
+            confirmacion.setTitle("Confirmación de eliminación | EscolaVision Desktop");
             confirmacion.setHeaderText("¿Está seguro de que desea eliminar este elemento?");
+            Stage alertStage = (Stage) confirmacion.getDialogPane().getScene().getWindow();
+            alertStage.getIcons().add(new Image("escolavision.png"));
 
             Optional<ButtonType> resultado = confirmacion.showAndWait();
 
@@ -714,15 +961,14 @@ public class miControlador implements Initializable {
                     limpiar(tab);
                     cargar(tab);
                 } else {
-                    mostrarAlerta(Alert.AlertType.ERROR, "Error","Error al borrar",
+                    mostrarAlerta(Alert.AlertType.ERROR, "Error", "Error al borrar",
                             "No se ha podido borrar el elemento seleccionado. Compruebe que no está siendo usado en otro registro.");
                 }
             }
         } else {
-            mostrarAlerta(Alert.AlertType.ERROR, "Error","Error", "Tipo desconocido: " + tipo);
+            mostrarAlerta(Alert.AlertType.ERROR, "Error", "Error", "Tipo desconocido: " + tipo);
         }
     }
-
 
     private GenericDAO getDAOForType(String tipo) {
         return switch (tipo) {
@@ -736,7 +982,6 @@ public class miControlador implements Initializable {
             default -> null;
         };
     }
-
 
     private void insertarYActualizar(String tipo) {
         boolean isUpdate = false;
@@ -758,6 +1003,7 @@ public class miControlador implements Initializable {
                 Pregunta p1 = new Pregunta();
                 p1.setTest(buscarTestPorNombre(txtTestQuest.getText()));
                 p1.setEnunciado(txtEnunQuest.getText());
+                p1.setTitulo(txtTituloQuest.getText());
 
                 if (!txtIdQuest.getText().isEmpty()) {
                     p1.setId(Integer.parseInt(txtIdQuest.getText()));
@@ -771,7 +1017,8 @@ public class miControlador implements Initializable {
                 a1.setNombre(txtNameAlm.getText());
                 a1.setApellidos(txtSurnameAlm.getText());
                 a1.setDni(txtDNIAlm.getText());
-                a1.setProfesor(buscarProfesorPorDni(cbDNIProfAlm.getSelectionModel().getSelectedItem()));
+                String[] parts = txtDNIProfAlm.getText().trim().split("\\s+", 2);
+                a1.setProfesor(buscarProfesorPorNombreYApellidos(parts[0], parts[1]));
                 a1.setClaveaccesoalumno(txtPasswordAlm.getText());
                 if (imgViewPicAlum.getImage() != null) {
                     String base64Image = imageToBase64(imgViewPicAlum.getImage());
@@ -789,7 +1036,7 @@ public class miControlador implements Initializable {
                 p1.setNombre(txtNameProf.getText());
                 p1.setApellidos(txtSurnameProf.getText());
                 p1.setDni(txtDNIProf.getText());
-                p1.setArea(buscarAreaPorNombre(cbAreaProf.getSelectionModel().getSelectedItem()));
+                p1.setArea(buscarAreaPorNombre(txtAreaProf.getText()));
                 p1.setClaveaccesoprof(txtPasswordProf.getText());
                 if (imgViewFoto1.getImage() != null) {
                     String base64Image = imageToBase64(imgViewFoto1.getImage());
@@ -820,8 +1067,13 @@ public class miControlador implements Initializable {
             }
             case "pxa": {
                 PxA p1 = new PxA();
-                p1.setArea(buscarAreaPorNombre(cbAreaPxA.getSelectionModel().getSelectedItem()));
-                p1.setPregunta(buscarPreguntaPorId(Integer.parseInt(cbIdQuestPxA.getSelectionModel().getSelectedItem())));
+                p1.setArea(buscarAreaPorNombre(txtAreaPxA.getText()));
+                if(txtQuestPxA.getText().contains("Pregunta")){
+                    String[] parts = txtQuestPxA.getText().trim().split("\\s+",2);
+                    p1.setPregunta(buscarPreguntaPorId(Integer.parseInt(parts[1])));
+                }else{
+                    p1.setPregunta(buscarPreguntaPorId(Integer.parseInt(txtQuestPxA.getText())));
+                }
 
                 if (!txtIdPxA.getText().isEmpty()) {
                     p1.setId(Integer.parseInt(txtIdPxA.getText()));
@@ -832,7 +1084,8 @@ public class miControlador implements Initializable {
             }
             case "intentos": {
                 Intentos i1 = new Intentos();
-                i1.setAlumno(buscarAlumnoPorDni(cbDNITry.getSelectionModel().getSelectedItem()));
+                String[] parts = txtDNITry.getText().trim().split("\\s+", 2);
+                i1.setAlumno(buscarAlumnoPorNombreYApellidos(parts[0], parts[1]));
                 i1.setTest(buscarTestPorNombre(txtTestTry.getText()));
                 i1.setFecha(String.valueOf(txtDateTry.getValue()));
                 i1.setHora(txtTimeTry.getText());
@@ -846,7 +1099,7 @@ public class miControlador implements Initializable {
                 break;
             }
             default: {
-                mostrarAlerta(Alert.AlertType.WARNING, "Warning","Operación no válida", "El tipo especificado no es válido.");
+                mostrarAlerta(Alert.AlertType.WARNING, "Warning", "Operación no válida", "El tipo especificado no es válido.");
                 return;
             }
         }
@@ -856,7 +1109,7 @@ public class miControlador implements Initializable {
             cargar(getTabByTipo(tipo));
         } else {
             String operacion = isUpdate ? "actualizar" : "insertar";
-            mostrarAlerta(Alert.AlertType.ERROR, "Error","Error al " + operacion, "No se ha podido " + operacion + " el elemento seleccionado.");
+            mostrarAlerta(Alert.AlertType.ERROR, "Error", "Error al " + operacion, "No se ha podido " + operacion + " el elemento seleccionado.");
         }
     }
 
@@ -890,7 +1143,7 @@ public class miControlador implements Initializable {
                 txtNameAlm.setEditable(editable);
                 txtSurnameAlm.setEditable(editable);
                 txtDNIAlm.setEditable(editable);
-                cbDNIProfAlm.setMouseTransparent(!editable);
+                txtDNIProfAlm.setMouseTransparent(!editable);
                 txtPasswordAlm.setEditable(editable);
                 if (editable) {
                     habilitarArrastrarYSoltar();
@@ -907,7 +1160,7 @@ public class miControlador implements Initializable {
                 txtSurnameProf.setEditable(editable);
                 txtDNIProf.setEditable(editable);
                 txtPasswordProf.setEditable(editable);
-                cbAreaProf.setMouseTransparent(!editable);
+                txtAreaProf.setMouseTransparent(!editable);
                 if (editable) {
                     habilitarArrastrarYSoltar();
                     agregarEventListenersParaSeleccionarImagen();
@@ -932,14 +1185,14 @@ public class miControlador implements Initializable {
             }
             case "pxa": {
                 boolean editable = btnEditarPxA.getText().equals("Cancelar");
-                cbAreaPxA.setMouseTransparent(!editable);
-                cbIdQuestPxA.setMouseTransparent(!editable);
+                txtAreaPxA.setMouseTransparent(!editable);
+                txtQuestPxA.setMouseTransparent(!editable);
                 break;
             }
             case "intentos": {
                 boolean editable = btnEditarIntentos.getText().equals("Cancelar");
                 txtTestTry.setEditable(editable);
-                cbDNITry.setMouseTransparent(!editable);
+                txtDNITry.setMouseTransparent(!editable);
                 txtDateTry.setEditable(editable);
                 txtTimeTry.setEditable(editable);
                 txtResTry.setEditable(editable);
@@ -967,7 +1220,6 @@ public class miControlador implements Initializable {
         imgViewFoto1.setOnMouseClicked(null);
     }
 
-
     private void ajustarImagenes() {
         imgViewPicAlum.setFitHeight(67);
         imgViewPicAlum.setFitWidth(74);
@@ -980,7 +1232,6 @@ public class miControlador implements Initializable {
         imgViewPicArea.setPreserveRatio(true);
         imgViewFoto1.setPreserveRatio(true);
     }
-
 
     private void agregarEventListenersParaSeleccionarImagen() {
         imgViewPicAlum.setOnMouseClicked(e -> abrirFileChooser(imgViewPicAlum));
@@ -1101,32 +1352,30 @@ public class miControlador implements Initializable {
             ByteArrayInputStream bis = new ByteArrayInputStream(imageBytes);
 
             BufferedImage bufferedImage = ImageIO.read(bis);
-
-            Image image = SwingFXUtils.toFXImage(bufferedImage, null);
-
-            return image;
+			
+			return SwingFXUtils.toFXImage(bufferedImage, null);
         } catch (IOException e) {
             return null;
         }
     }
 
-    private void cargarComboBox(Tab newTab) {
+    private void cargarDatos(Tab newTab) {
         if (newTab == tabAlum) {
-            cargarDatosComboBoxProfesor();
+            cargarDatosProfesor();
         } else if (newTab == tabProf) {
-            cargarDatosComboBoxAreas();
+            cargarDatosAreas();
         } else if (newTab == tabTr) {
-            cargarDatosComboBoxAlumnos();
-            cargarDatosComboBoxTests();
+            cargarDatosAlumnos();
+            cargarDatosTests();
         } else if (newTab == tabQuest) {
-            cargarDatosComboBoxTests();
+            cargarDatosTests();
         } else if (newTab == tabPxA) {
-            cargarDatosComboBoxAreas();
-            cargarDatosComboBoxPreguntas();
+            cargarDatosAreas();
+            cargarDatosPreguntas();
         }
     }
 
-    private void cargarDatosComboBoxPreguntas() {
+    private void cargarDatosPreguntas() {
         ObservableList<String> idList = FXCollections.observableArrayList();
 
         String sql = "SELECT id FROM pregunta";
@@ -1136,147 +1385,42 @@ public class miControlador implements Initializable {
 
             while (resultSet.next()) {
                 String id = resultSet.getString("id");
-                idList.add(id);
+                idList.add("Pregunta " + id);
             }
 
-            FilteredList<String> filteredList = new FilteredList<>(idList, s -> true);
-            cbIdQuestPxA.setItems(filteredList);
-
-            TextField editor = cbIdQuestPxA.getEditor();
-            cbIdQuestPxA.setEditable(true);
-
-            editor.textProperty().addListener((observable, oldValue, newValue) -> {
-                filteredList.setPredicate(item -> item.toLowerCase().contains(newValue.toLowerCase()));
-
-                if (!filteredList.isEmpty()) {
-                    cbIdQuestPxA.show();
-                }
-            });
+            configureAutocomplete(txtQuestPxA, idList);
 
         } catch (SQLException e) {
-            System.out.println("No se pueden cargar los datos del ComboBox Preguntas");
+            showErrorBD();
         }
     }
 
-    private void cargarDatosComboBoxAlumnos() {
-        ObservableList<String> dniList = FXCollections.observableArrayList();
+    private void cargarDatosAlumnos() {
+        ObservableList<String> nombreApellidoList = FXCollections.observableArrayList();
 
-        String sql = "SELECT dni FROM alumno";
+        String sql = "SELECT nombre, apellidos FROM alumno";
 
         try (PreparedStatement statement = conexion.prepareStatement(sql);
              ResultSet resultSet = statement.executeQuery()) {
 
             while (resultSet.next()) {
-                String dni = resultSet.getString("dni");
-                dniList.add(dni);
+                String nombre = resultSet.getString("nombre");
+                String apellido = resultSet.getString("apellidos");
+                String nombreApellido = nombre + " " + apellido;
+                nombreApellidoList.add(nombreApellido);
             }
 
-            FilteredList<String> filteredList = new FilteredList<>(dniList, s -> true);
-            cbDNITry.setItems(filteredList);
-
-            TextField editor = cbDNITry.getEditor();
-            cbDNITry.setEditable(true);
-            editor.textProperty().addListener((observable, oldValue, newValue) -> {
-                filteredList.setPredicate(item -> item.toLowerCase().contains(newValue.toLowerCase()));
-                if (!filteredList.isEmpty()) {
-                    cbDNITry.show();
-                }
-            });
+            TextFields.bindAutoCompletion(txtDNITry, nombreApellidoList);
 
         } catch (SQLException e) {
-            System.out.println("No se pueden cargar los datos del ComboBox Alumnos");
+            showErrorBD();
         }
     }
 
-    private final AnchorPane anchorPaneQuest = new AnchorPane();
-    private final AnchorPane anchorPaneTry = new AnchorPane();
-
-    private void cargarDatosComboBoxTests() {
-        txtTestQuest.setMaxWidth(165.6);
-        txtTestTry.setMaxWidth(165.6);
+    private void cargarDatosTests() {
         ObservableList<String> originalList = FXCollections.observableArrayList();
 
-        double rowHeight = 24.0;
-        double maxHeight = 50.0;
-        listViewDesplegableQuest.setMaxHeight(maxHeight);
-        listViewDesplegableTry.setMaxHeight(maxHeight);
-        listViewDesplegableQuest.setMaxWidth(165.6);
-        listViewDesplegableTry.setMaxWidth(165.6);
-        listViewDesplegableQuest.setVisible(false);
-        listViewDesplegableTry.setVisible(false);
-
-        // Filtrado para txtTestQuest
-        txtTestQuest.textProperty().addListener((observable, oldValue, newValue) -> filterListViewQuest(newValue, originalList));
-
-        // Filtrado para txtTestTry
-        txtTestTry.textProperty().addListener((observable, oldValue, newValue) -> filterListViewTry(newValue, originalList));
-
-        // Acción al seleccionar un item de listViewDesplegableQuest
-        listViewDesplegableQuest.setOnMouseClicked(event -> {
-            String selectedItem = listViewDesplegableQuest.getSelectionModel().getSelectedItem();
-            if (selectedItem != null) {
-                txtTestQuest.setText(selectedItem);
-                listViewDesplegableQuest.setVisible(false);
-            }
-        });
-
-        // Acción al seleccionar un item de listViewDesplegableTry
-        listViewDesplegableTry.setOnMouseClicked(event -> {
-            String selectedItem = listViewDesplegableTry.getSelectionModel().getSelectedItem();
-            if (selectedItem != null) {
-                txtTestTry.setText(selectedItem);
-                listViewDesplegableTry.setVisible(false);
-            }
-        });
-
-        // Agregar los controles al AnchorPane en TabQuest solo si está vacío
-        if (anchorPaneQuest.getChildren().isEmpty()) {
-            anchorPaneQuest.setPrefWidth(165.6);
-            anchorPaneQuest.setMaxWidth(165.6);
-            anchorPaneQuest.setStyle("-fx-border-color: lightgray;");
-            anchorPaneQuest.getChildren().addAll(txtTestQuest, listViewDesplegableQuest);
-
-            AnchorPane.setTopAnchor(txtTestQuest, 0.0);
-            AnchorPane.setLeftAnchor(txtTestQuest, 0.0);
-
-            AnchorPane.setTopAnchor(listViewDesplegableQuest, 30.0);
-            AnchorPane.setLeftAnchor(listViewDesplegableQuest, 0.0);
-
-            listViewDesplegableQuest.managedProperty().bind(listViewDesplegableQuest.visibleProperty());
-        }
-
-        // Agregar los controles al AnchorPane en TabTr solo si está vacío
-        if (anchorPaneTry.getChildren().isEmpty()) {
-            anchorPaneTry.setPrefWidth(165.6);
-            anchorPaneTry.setMaxWidth(165.6);
-            anchorPaneTry.setStyle("-fx-border-color: lightgray;");
-            anchorPaneTry.getChildren().addAll(txtTestTry, listViewDesplegableTry);
-
-            AnchorPane.setTopAnchor(txtTestTry, 0.0);
-            AnchorPane.setLeftAnchor(txtTestTry, 0.0);
-
-            AnchorPane.setTopAnchor(listViewDesplegableTry, 30.0);
-            AnchorPane.setLeftAnchor(listViewDesplegableTry, 0.0);
-
-            listViewDesplegableTry.managedProperty().bind(listViewDesplegableTry.visibleProperty());
-        }
-
-        // Agregar los AnchorPane a los VBox correspondientes si no están ya agregados
-        if (vboxQuest != null) {
-            if (!vboxQuest.getChildren().contains(anchorPaneQuest)) {
-                vboxQuest.getChildren().add(1, anchorPaneQuest); // Agregar a la posición 1 (segundo lugar)
-            }
-        }
-
-        if (vboxTry != null) {
-            if (!vboxTry.getChildren().contains(anchorPaneTry)) {
-                vboxTry.getChildren().add(1, anchorPaneTry); // Agregar a la posición 1 (segundo lugar)
-            }
-        }
-
-        // Consulta SQL para cargar los datos en originalList
         String sql = "SELECT nombretest FROM test";
-
         try (PreparedStatement statement = conexion.prepareStatement(sql);
              ResultSet resultSet = statement.executeQuery()) {
 
@@ -1284,388 +1428,562 @@ public class miControlador implements Initializable {
                 originalList.add(resultSet.getString("nombretest"));
             }
 
-            // Asignar la lista de elementos a ambos ListView
-            listViewDesplegableQuest.setItems(originalList);
-            listViewDesplegableTry.setItems(originalList);
-
-            // Ajustar la altura de los ListView
-            int itemCount = listViewDesplegableQuest.getItems().size();
-            listViewDesplegableQuest.setPrefHeight(Math.min(itemCount * rowHeight, maxHeight));
-            listViewDesplegableTry.setPrefHeight(Math.min(itemCount * rowHeight, maxHeight));
+            configureAutocomplete(txtTestQuest, originalList);
+            configureAutocomplete(txtTestTry, originalList);
 
         } catch (SQLException e) {
             showErrorBD();
         }
     }
 
-    private void filterListViewQuest(String filterText, ObservableList<String> originalList) {
-        if (filterText != null && !filterText.isEmpty()) {
-            ObservableList<String> filtered = FXCollections.observableArrayList();
-            for (String item : originalList) {
-                if (item.toLowerCase().contains(filterText.toLowerCase())) {
-                    filtered.add(item);
-                }
+    private void cargarDatosAreas() {
+        ObservableList<String> areaList = FXCollections.observableArrayList();
+
+        String sql = "SELECT nombre FROM area";
+
+        try (PreparedStatement statement = conexion.prepareStatement(sql);
+             ResultSet resultSet = statement.executeQuery()) {
+
+            while (resultSet.next()) {
+                String nombre = resultSet.getString("nombre");
+                areaList.add(nombre);
             }
-            listViewDesplegableQuest.setItems(filtered);
-            listViewDesplegableQuest.setVisible(!filtered.isEmpty());
-        } else {
-            listViewDesplegableQuest.setItems(originalList);
-            listViewDesplegableQuest.setVisible(false);
+
+            configureAutocomplete(txtAreaProf, areaList);
+            configureAutocomplete(txtAreaPxA, areaList);
+
+        } catch (SQLException e) {
+            showErrorBD();
         }
     }
 
-    private void filterListViewTry(String filterText, ObservableList<String> originalList) {
-        if (filterText != null && !filterText.isEmpty()) {
-            ObservableList<String> filtered = FXCollections.observableArrayList();
-            for (String item : originalList) {
-                if (item.toLowerCase().contains(filterText.toLowerCase())) {
-                    filtered.add(item);
-                }
+    private void cargarDatosProfesor() {
+        ObservableList<String> nombreApellidoList = FXCollections.observableArrayList();
+
+        String sql = "SELECT nombre, apellidos FROM profesor";
+
+        try (PreparedStatement statement = conexion.prepareStatement(sql);
+             ResultSet resultSet = statement.executeQuery()) {
+
+            while (resultSet.next()) {
+                String nombre = resultSet.getString("nombre");
+                String apellido = resultSet.getString("apellidos");
+                String nombreApellido = nombre + " " + apellido;
+                nombreApellidoList.add(nombreApellido);
             }
-            listViewDesplegableTry.setItems(filtered);
-            listViewDesplegableTry.setVisible(!filtered.isEmpty());
-        } else {
-            listViewDesplegableTry.setItems(originalList);
-            listViewDesplegableTry.setVisible(false);
+
+            configureAutocomplete(txtDNIProfAlm, nombreApellidoList);
+
+        } catch (SQLException e) {
+            showErrorBD();
         }
     }
 
-
+    private void configureAutocomplete(TextField textField, ObservableList<String> data) {
+        TextFields.bindAutoCompletion(textField, data);
+        textField.setEditable(true);
+    }
 
     private void showErrorBD() {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error al cargar los datos");
-        alert.setHeaderText(null);
-        alert.setContentText("Hubo un problema con la conexión a la base de datos.");
-        alert.showAndWait();
+        javafx.application.Platform.runLater(() -> {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error de Base de Datos | EscolaVision Desktop");
+            Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
+            alertStage.getIcons().add(new Image("escolavision.png"));
+            alert.setHeaderText(null);
+            alert.setContentText("Hubo un error al acceder a la base de datos.");
+            alert.showAndWait();
+        });
+    }
+
+    private void cargar(Tab newTab) {
+        if (newTab == tabAlum) {
+            cargarDatos("alumno", listViewAlumnos);
+        } else if (newTab == tabProf) {
+            cargarDatos("profesor", listViewProfesores);
+        } else if (newTab == tabAr) {
+            cargarDatos("area", listViewArea);
+        } else if (newTab == tabTr) {
+            cargarDatos("intentos", listViewIntentos);
+        } else if (newTab == tabQuest) {
+            cargarDatos("pregunta", listViewPreguntas);
+        } else if (newTab == tabPxA) {
+            cargarDatos("pxa", listViewPxa);
+        } else if (newTab == tabTest) {
+            cargarDatos("test", listViewTest);
+        }
+    }
+
+    private void limpiar(Tab newTab) {
+        Platform.runLater(() -> {
+            switch (newTab.getText()) {
+                case "EscolaVision" -> {
+                    txtUser.clear();
+                    txtPassword.clear();
+                    chkProf.setSelected(false);
+                }
+                case "Test" -> {
+                    txtIdTest.clear();
+                    txtTestName.clear();
+                    listViewTest.getSelectionModel().clearSelection();
+                    cambiarBotonEditar(btnEditarTest, "Editar", "test");
+                    cambiarBotonSave(btnSaveTest, "Guardar", "test");
+                }
+                case "Preguntas" -> {
+                    txtIdQuest.clear();
+                    txtTestQuest.clear();
+                    txtEnunQuest.clear();
+                    txtTituloQuest.clear();
+                    listViewPreguntas.getSelectionModel().clearSelection();
+                    cambiarBotonEditar(btnEditarPreguntas, "Editar", "pregunta");
+                    cambiarBotonSave(btnSaveQuest, "Guardar", "pregunta");
+                }
+                case "Alumnado" -> {
+                    txtIdAlm.clear();
+                    txtNameAlm.clear();
+                    txtSurnameAlm.clear();
+                    txtPasswordAlm.clear();
+                    txtDNIProfAlm.clear();
+                    txtDNIAlm.clear();
+                    imgViewPicAlum.setImage(null);
+                    listViewAlumnos.getSelectionModel().clearSelection();
+                    cambiarBotonEditar(btnEditarAlumnos, "Editar", "alumno");
+                    cambiarBotonSave(btnSaveAlum, "Guardar", "alumno");
+                }
+                case "Profesorado" -> {
+                    txtIdProf.clear();
+                    txtNameProf.clear();
+                    txtSurnameProf.clear();
+                    txtPasswordProf.clear();
+                    txtAreaProf.clear();
+                    txtDNIProf.clear();
+                    imgViewFoto1.setImage(null);
+                    listViewProfesores.getSelectionModel().clearSelection();
+                    cambiarBotonEditar(btnEditarProfesores, "Editar", "profesor");
+                    cambiarBotonSave(btnSaveProf, "Guardar", "profesor");
+                }
+                case "Area" -> {
+                    txtIdArea.clear();
+                    txtNameArea.clear();
+                    txtDescripArea.clear();
+                    imgViewPicArea.setImage(null);
+                    listViewArea.getSelectionModel().clearSelection();
+                }
+                case "Pregunta x Área" -> {
+                    txtIdPxA.clear();
+                    txtAreaPxA.clear();
+                    txtQuestPxA.clear();
+                    txtEnumPxA.clear();
+                    listViewPxa.getSelectionModel().clearSelection();
+                    cambiarBotonEditar(btnEditarPxA, "Editar", "pxa");
+                    cambiarBotonSave(btnSavePxA, "Guardar", "pxa");
+                }
+                case "Intentos" -> {
+                    txtIdTry.clear();
+                    txtTestTry.clear();
+                    txtDNITry.clear();
+                    txtDateTry.setValue(null);
+                    txtTimeTry.clear();
+                    txtResTry.clear();
+                    listViewIntentos.getSelectionModel().clearSelection();
+                    hboxTry.getChildren().clear();
+                    cambiarBotonEditar(btnEditarIntentos, "Editar", "intentos");
+                    cambiarBotonSave(btnSaveTry, "Guardar", "intentos");
+                }
+            }
+        });
+    }
+
+    private String quiensoy = "";
+    
+    public void login() {
+        String user = txtUser.getText();
+        String password = txtPassword.getText();
+        String tipo = chkProf.isSelected() ? "profesor" : "alumno";
+        String query = tipo.equals("profesor")
+                ? "SELECT * FROM profesor WHERE dni = ? AND claveaccesoprof = ?"
+                : "SELECT * FROM alumno WHERE dni = ? AND claveaccesoalum = ?";
+        
+        try (PreparedStatement stmt = conexion.prepareStatement(query)) {
+            stmt.setString(1, user);
+            stmt.setString(2, password);
+            
+            ResultSet rs = stmt.executeQuery();
+            
+            if (rs.next()) {
+                String nombreCompleto = rs.getString("nombre") + " " + rs.getString("apellidos");
+                configurarHeader(nombreCompleto);
+
+                if (tipo.equals("profesor") && rs.getInt("isOrientador") == 1) {
+                    rolAdmin();
+                    quiensoy = "Admin";
+                } else if (tipo.equals("profesor")) {
+                    rolProfesor();
+                    quiensoy = "Profesor";
+                } else {
+                    rolAlumno();
+                    quiensoy = "Alumno";
+                }
+
+            } else {
+                mostrarAlerta(Alert.AlertType.ERROR, "Error", "Login fallido", "Usuario o contraseña incorrectos. Intentelo de nuevo");
+            }
+        } catch (SQLException e) {
+            System.out.println("No se puede realizar el login: " + e.getMessage());
+        }
+    }
+    private Label lblNombre = new Label();
+    
+    private void configurarHeader(String nombreCompleto) {
+        hbHeader.getChildren().clear();
+        
+        hbHeader.getChildren().addAll(btnLogo, lblEscolavisionDesktop);
+        
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+        
+        lblNombre = new Label(nombreCompleto);
+        lblNombre.setStyle("-fx-font-size: 14px; -fx-text-fill: #333;");
+        HBox.setMargin(lblNombre, new Insets(0, 10, 0, 0));
+        
+        Button btnCerrarSesion = new Button("Cerrar sesión");
+        btnCerrarSesion.setStyle("-fx-background-color: #d9534f; -fx-text-fill: white; -fx-start-margin: 15px;");
+        ImageView imageView = new ImageView(new Image("logOut.png"));
+        imageView.setFitWidth(16);
+        imageView.setFitHeight(16);
+        btnCerrarSesion.setGraphic(imageView);
+        btnCerrarSesion.setOnAction(event -> cerrarSesion(spacer, lblNombre, btnCerrarSesion));
+        
+        
+        hbHeader.getChildren().addAll(spacer, lblNombre, btnCerrarSesion);
+    }
+
+    private void cerrarSesion(Region spacer, Label lblNombre, Button btnCerrarSesion) {
+        Tab seleccionado = tabPane.getSelectionModel().getSelectedItem();
+        Button editarSeleccionado = tabToButtonMap.get(seleccionado);
+        Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION);
+        Stage alertStage = (Stage) confirmacion.getDialogPane().getScene().getWindow();
+        alertStage.getIcons().add(new Image("escolavision.png"));
+        confirmacion.setTitle("Confirmación de cierre de sesión | EscolaVision Desktop");
+        confirmacion.setHeaderText("¿Está seguro de que desea cerrar sesión?");
+        if (editarSeleccionado.getText().equals("Cancelar")) {
+            confirmacion.setContentText("Se perderán todos los cambios no guardados.");
+        }
+        Optional<ButtonType> resultado = confirmacion.showAndWait();
+
+        if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
+            hbHeader.getChildren().removeAll(spacer, lblNombre, btnCerrarSesion);
+            tabPane.getTabs().removeAll(tabTest,tabQuest,tabAlum,tabProf,tabAr,tabPxA,tabTr);
+            tabPane.getTabs().add(tabHome);
+        }
+    }
+
+    private void cargarDatos(String tabla, ListView<String> listView) {
+        List<String> tablasPermitidas = Arrays.asList("alumno", "profesor", "area", "test", "pregunta", "pxa", "intentos");
+        if (!tablasPermitidas.contains(tabla.toLowerCase())) {
+            mostrarAlerta(
+                    Alert.AlertType.ERROR,
+                    "Error",
+                    "Tabla no válida",
+                    "El nombre de la tabla especificada no es válido."
+            );
+            return;
+        }
+
+        String query = "SELECT * FROM " + tabla;
+
+        try (PreparedStatement stmt = conexion.prepareStatement(query);
+             ResultSet rs = stmt.executeQuery()) {
+            ObservableList<String> items = FXCollections.observableArrayList();
+
+            String[] partes = lblNombre.getText().trim().split("\\s+");
+            String nombre = partes.length > 0 ? partes[0] : null;
+            String apellidos = partes.length > 2 ? partes[1] + " " + partes[2] : null;
+
+            if (quiensoy.equals("Profesor")) {
+                if ("profesor".equalsIgnoreCase(tabla) && nombre != null && apellidos != null) {
+                    Profesor profesor = buscarProfesorPorNombreYApellidos(nombre, apellidos);
+                    if (profesor != null) {
+                        items.add(profesor.getNombre() + " " + profesor.getApellidos());
+                    } else {
+                        items.add("No se encontró al profesor con el nombre y apellidos especificados.");
+                    }
+                    Platform.runLater(() -> actualizarListView(listView, items));
+                    return;
+                } else if ("alumno".equalsIgnoreCase(tabla)) {
+                    int idProfesor = buscarProfesorPorNombreYApellidos(nombre, apellidos).getId();
+                    query = "SELECT * FROM alumno WHERE idprofesor = ?";
+                    try (PreparedStatement stmtAlumnos = conexion.prepareStatement(query)) {
+                        stmtAlumnos.setInt(1, idProfesor);
+                        ResultSet rsAlumnos = stmtAlumnos.executeQuery();
+
+                        while (rsAlumnos.next()) {
+                            String dato = rsAlumnos.getString("nombre") + " " + rsAlumnos.getString("apellidos");
+                            items.add(dato);
+                        }
+
+                        Platform.runLater(() -> actualizarListView(listView, items));
+                        return;
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                        Platform.runLater(() -> mostrarAlerta(
+                                Alert.AlertType.ERROR,
+                                "Error",
+                                "Error al cargar alumnos",
+                                "No se pudieron cargar los alumnos asociados a este profesor."
+                        ));
+                    }
+                }else if("intentos".equalsIgnoreCase(tabla)){
+                    int idProfesor = buscarProfesorPorNombreYApellidos(nombre, apellidos).getId();
+                    query = "SELECT * FROM alumno WHERE idprofesor = ?";
+                    try (PreparedStatement stmtAlumnos = conexion.prepareStatement(query)) {
+                        stmtAlumnos.setInt(1, idProfesor);
+                        ResultSet rsAlumnos = stmtAlumnos.executeQuery();
+
+                        while (rsAlumnos.next()) {
+                            int idIntento = buscarAlumnoPorDni(rsAlumnos.getString("dni")).getId();
+                            query = "SELECT * FROM intentos WHERE idAlumno = ?";
+                            try (PreparedStatement stmtAlumnos2 = conexion.prepareStatement(query)) {
+                                stmtAlumnos2.setInt(1, idIntento);
+                                ResultSet rsIntentos = stmtAlumnos2.executeQuery();
+
+                                while (rsIntentos.next()) {
+                                    String dato = "Intento " + rsIntentos.getString("id");
+                                    items.add(dato);
+                                }
+
+                                Platform.runLater(() -> actualizarListView(listView, items));
+                            }catch (SQLException e) {
+                                e.printStackTrace();
+                                Platform.runLater(() -> mostrarAlerta(
+                                        Alert.AlertType.ERROR,
+                                        "Error",
+                                        "Error al cargar intentos",
+                                        "No se pudieron cargar los intentos asociados a este alumno."
+                                ));
+                            }
+                        }
+
+                        return;
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                        Platform.runLater(() -> mostrarAlerta(
+                                Alert.AlertType.ERROR,
+                                "Error",
+                                "Error al cargar alumnos",
+                                "No se pudieron cargar los alumnos asociados a este profesor."
+                        ));
+                    }
+                }
+            } else if (quiensoy.equals("Alumno")) {
+                if ("alumno".equalsIgnoreCase(tabla) && nombre != null && apellidos != null) {
+                    Alumno alumno = buscarAlumnoPorNombreYApellidos(nombre, apellidos);
+                    if (alumno != null) {
+                        items.add(alumno.getNombre() + " " + alumno.getApellidos());
+                    } else {
+                        items.add("No se encontró al alumno con el nombre y apellidos especificados.");
+                    }
+                    Platform.runLater(() -> actualizarListView(listView, items));
+                    return;
+                }else if ("intentos".equalsIgnoreCase(tabla)) {
+                    int idIntento = buscarAlumnoPorNombreYApellidos(nombre, apellidos).getId();
+                    query = "SELECT * FROM intentos WHERE idAlumno = ?";
+                    try (PreparedStatement stmtAlumnos = conexion.prepareStatement(query)) {
+                        stmtAlumnos.setInt(1, idIntento);
+                        ResultSet rsIntentos = stmtAlumnos.executeQuery();
+
+                        while (rsIntentos.next()) {
+                            String dato = "Intento " + rsIntentos.getString("id");
+                            items.add(dato);
+                        }
+
+                        Platform.runLater(() -> actualizarListView(listView, items));
+                        return;
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                        Platform.runLater(() -> mostrarAlerta(
+                                Alert.AlertType.ERROR,
+                                "Error",
+                                "Error al cargar intentos",
+                                "No se pudieron cargar los intentos asociados a este alumno."
+                        ));
+                    }
+                }
+            }
+
+            while (rs.next()) {
+                String dato = obtenerDatoPorTabla(tabla, rs);
+                items.add(dato);
+            }
+
+            Platform.runLater(() -> actualizarListView(listView, items));
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            Platform.runLater(() -> mostrarAlerta(
+                    Alert.AlertType.ERROR,
+                    "Error",
+                    "Error al cargar datos",
+                    "No se pudo cargar los datos de la base de datos."
+            ));
+        }
     }
 
 
-    private void cargarDatosComboBoxAreas() {
-		ObservableList<String> area = FXCollections.observableArrayList();
+    private String obtenerDatoPorTabla(String tabla, ResultSet rs) throws SQLException {
+        return switch (tabla.toLowerCase()) {
+            case "test" -> {
+                String testId = rs.getString("id");
+                String nombreTest = rs.getString("nombretest");
+                yield "Test " + String.format("%03d", Integer.parseInt(testId)) + " - " + nombreTest;
+            }
+            case "pregunta" -> "Pregunta " + rs.getString("id");
+            case "alumno", "profesor" -> rs.getString("nombre") + " " + rs.getString("apellidos");
+            case "pxa" -> "Pregunta por Área " + rs.getString("id");
+            case "intentos" -> "Intento " + rs.getString("id");
+            case "area" -> "AREA " + rs.getString("id") + " - " + rs.getString("nombre");
+            default -> rs.getString("id");
+        };
+    }
 
-		String sql = "SELECT nombre FROM area";
+    private void actualizarListView(ListView<String> listView, ObservableList<String> items) {
+        listView.setItems(items);
+        if (!items.isEmpty() && !quiensoy.equals("Admin")) {
+            if(quiensoy.equals("Profesor")){
+                listViewProfesores.getSelectionModel().select(0);
+            }else if(quiensoy.equals("Alumno")){
+                listViewAlumnos.getSelectionModel().select(0);
+            }
+        }
+    }
 
-		try (PreparedStatement statement = conexion.prepareStatement(sql);
-			 ResultSet resultSet = statement.executeQuery()) {
+    public Connection getConnection() throws IOException {
+        String IP, PORT, BBDD, USER, PWD;
+        IP = configuracion.getIP();
+        PORT = configuracion.getPort();
+        BBDD = configuracion.getBbdd();
+        USER = configuracion.getUser();
+        PWD = configuracion.getPwd();
 
-			while (resultSet.next()) {
-				String nombre = resultSet.getString("nombre");
-				area.add(nombre);
-			}
+        Connection conn;
+        try {
+            String cadconex = "jdbc:mariadb://" + IP + ":" + PORT + "/" + BBDD + " USER:" + USER + "PWD:" + PWD;
+            System.out.println(cadconex);
+            //Si usamos LAMP Funciona con ambos conectores
+            conn = DriverManager.getConnection("jdbc:mariadb://" + IP + ":" + PORT + "/" + BBDD, USER, PWD);
+            return conn;
+        } catch (SQLException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error | EscolaVision Desktop");
+            alert.setHeaderText("Ha ocurrido un error de conexión");
+            alert.setContentText(e.getMessage());
+            Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
+            alertStage.getIcons().add(new Image("escolavision.png"));
+            alert.showAndWait();
+            exit(0);
+            return null;
+        }
+    }
 
-			FilteredList<String> filteredList = new FilteredList<>(area, s -> true);
-			cbAreaProf.setItems(filteredList);
-			cbAreaPxA.setItems(filteredList);
+    public Test buscarTestPorNombre(String nombre) {
+        return testDAO.findByColumn("nombretest", nombre);
+    }
 
-			TextField editorProf = cbAreaProf.getEditor();
-			cbAreaProf.setEditable(true);
-			editorProf.textProperty().addListener((observable, oldValue, newValue) -> {
-				filteredList.setPredicate(item -> item.toLowerCase().contains(newValue.toLowerCase()));
-				if (!filteredList.isEmpty()) {
-					cbAreaProf.show();
-				}
-			});
+    public Test buscarTestPorId(String id) {
+        return testDAO.findByColumn("id", id);
+    }
+    public Pregunta buscarPreguntaPorId(int id) {
+        return preguntaDAO.findById(id);
+    }
 
-			TextField editorPxA = cbAreaPxA.getEditor();
-			cbAreaPxA.setEditable(true);
-			editorPxA.textProperty().addListener((observable, oldValue, newValue) -> {
-				filteredList.setPredicate(item -> item.toLowerCase().contains(newValue.toLowerCase()));
-				if (!filteredList.isEmpty()) {
-					cbAreaPxA.show();
-				}
-			});
+    public Alumno buscarAlumnoPorDni(String dni) {
+        return alumnoDAO.findByColumn("dni", dni);
+    }
 
-		} catch (SQLException e) {
-            System.out.println("No se pueden cargar los datos del ComboBox Areas");
-		}
-	}
+    public Alumno buscarAlumnoPorNombreYApellidos(String nombre, String apellidos) {
+        return alumnoDAO.buscarAlumnoPorNombreYApellidos(nombre,apellidos);
+    }
 
-	private void cargarDatosComboBoxProfesor() {
-		ObservableList<String> dniList = FXCollections.observableArrayList();
+    public Profesor buscarProfesorPorNombreYApellidos(String nombre, String apellidos) {
+        return profesorDAO.buscarProfesorPorNombreYApellidos(nombre,apellidos);
+    }
 
-		String sql = "SELECT dni FROM profesor";
+    public Area buscarAreaPorNombre(String nombre) {
+        return areaDAO.findByColumn("nombre", nombre);
+    }
 
-		try (PreparedStatement statement = conexion.prepareStatement(sql);
-			 ResultSet resultSet = statement.executeQuery()) {
+    public PxA buscarPxAPorId(int id) {
+        return pxaDAO.findById(id);
+    }
 
-			while (resultSet.next()) {
-				String dni = resultSet.getString("dni");
-				dniList.add(dni);
-			}
-
-			FilteredList<String> filteredList = new FilteredList<>(dniList, s -> true);
-			cbDNIProfAlm.setItems(filteredList);
-
-			TextField editor = cbDNIProfAlm.getEditor();
-			cbDNIProfAlm.setEditable(true);
-
-			editor.textProperty().addListener((observable, oldValue, newValue) -> {
-				filteredList.setPredicate(item -> item.toLowerCase().contains(newValue.toLowerCase()));
-
-				if (!filteredList.isEmpty()) {
-					cbDNIProfAlm.show();
-				}
-			});
-
-		} catch (SQLException e) {
-            System.out.println("No se pueden cargar los datos del ComboBox Profesor");
-		}
-	}
-
-
-	private void cargar(Tab newTab){
-		if (newTab == tabAlum) {
-			cargarDatos( "alumno",listViewAlumnos);
-		} else if (newTab == tabProf) {
-			cargarDatos("profesor",listViewProfesores);
-		} else if (newTab == tabAr) {
-			cargarDatos( "area",listViewArea);
-		} else if (newTab == tabTr) {
-			cargarDatos( "intentos", listViewIntentos);
-		}else if (newTab == tabQuest) {
-			cargarDatos("pregunta", listViewPreguntas);
-		}else if (newTab == tabPxA) {
-			cargarDatos( "pxa", listViewPxa);
-		}else if (newTab == tabTest) {
-			cargarDatos( "test", listViewTest);
-		}
-	}
-
-	private void limpiar(Tab newTab){
-		switch (newTab.getText()) {
-			case "Alumno" -> {
-				txtIdAlm.clear();
-				txtNameAlm.clear();
-				txtSurnameAlm.clear();
-				txtPasswordAlm.clear();
-				cbDNIProfAlm.setValue("");
-				txtDNIAlm.clear();
-				imgViewPicAlum.setImage(null);
-				listViewAlumnos.getSelectionModel().clearSelection();
-			}
-			case "Profesor" -> {
-				txtIdProf.clear();
-				txtNameProf.clear();
-				txtSurnameProf.clear();
-				txtPasswordProf.clear();
-				cbAreaProf.setValue("");
-				txtDNIProf.clear();
-				imgViewFoto1.setImage(null);
-				listViewProfesores.getSelectionModel().clearSelection();
-			}
-			case "Test" -> {
-				txtIdTest.clear();
-				txtTestName.clear();
-				listViewTest.getSelectionModel().clearSelection();
-			}
-			case "Preguntas" -> {
-				txtIdQuest.clear();
-				txtTestQuest.clear();
-				txtEnunQuest.clear();
-				listViewPreguntas.getSelectionModel().clearSelection();
-			}
-			case "PxA" ->{
-				txtIdPxA.clear();
-				cbAreaPxA.setValue("");
-				cbIdQuestPxA.setValue("");
-				txtEnumPxA.clear();
-				listViewPxa.getSelectionModel().clearSelection();
-			}
-			case "Intentos" -> {
-				txtIdTry.clear();
-				txtTestTry.clear();
-				cbDNITry.setValue("");
-				txtDateTry.setValue(null);
-				txtTimeTry.clear();
-				txtResTry.clear();
-				listViewIntentos.getSelectionModel().clearSelection();
-			}
-			case "Area" -> {
-				txtIdArea.clear();
-				txtNameArea.clear();
-				txtDescripArea.clear();
-				imgViewPicArea.setImage(null);
-				listViewArea.getSelectionModel().clearSelection();
-			}
-		}
-	}
-
-	public void login() {
-		String user = txtUser.getText();
-		String password = txtPassword.getText();
-		String tipo = chkProf.isSelected() ? "profesor" : "alumno";
-		String query;
-		if(tipo.equals("profesor")) {
-			query = "SELECT * FROM " + tipo + " WHERE dni = ? AND claveaccesoprof = ?";
-		}else{
-			query = "SELECT * FROM " + tipo + " WHERE dni = ? AND claveaccesoalum = ?";
-		}
-
-		try (PreparedStatement stmt = conexion.prepareStatement(query)) {
-			stmt.setString(1, user);
-			stmt.setString(2, password);
-
-			ResultSet rs = stmt.executeQuery();
-
-			if (rs.next()) {
-				boolean isOrientador = false;
-				if (tipo.equals("profesor")) {
-					isOrientador = rs.getInt("isOrientador") == 1;
-				}
-
-				if (tipo.equals("alumno")) {
-					rolAlumno();
-				} else {
-					if (isOrientador) {
-						rolAdmin();
-					} else {
-						rolProfesor();
-					}
-				}
-			} else {
-				mostrarAlerta(Alert.AlertType.ERROR,"Error","Login fallido","Usuario o contraseña incorrectos. Intentelo de nuevo");
-			}
-		} catch (SQLException e) {
-            System.out.println("No se puede realizar el login");
-		}
-	}
-
-	private void cargarDatos(String tabla, ListView<String> listView) {
-		String query = "SELECT * FROM " + tabla;
-
-		try (PreparedStatement stmt = conexion.prepareStatement(query);
-			 ResultSet rs = stmt.executeQuery()) {
-
-			ObservableList<String> items = FXCollections.observableArrayList();
-			while (rs.next()) {
-				String nombre = switch (tabla) {
-					case "alumno", "profesor" -> rs.getString("dni");
-					case "area" -> rs.getString("nombre");
-					case "test" -> rs.getString("nombretest");
-					default -> rs.getString("id");
-				};
-				items.add(nombre);
-			}
-			listView.setItems(items);
-		} catch (SQLException e) {
-            System.out.println("No se pueden cargar los datos");
-			mostrarAlerta(Alert.AlertType.ERROR, "Error","Error al cargar datos", "No se pudo cargar los datos de la base de datos.");
-		}
-	}
-
-	public Connection getConnection() throws IOException {
-		String IP, PORT, BBDD, USER, PWD;
-		IP = configuracion.getIP();
-		PORT = configuracion.getPort();
-		BBDD = configuracion.getBbdd();
-		USER = configuracion.getUser();
-		PWD = configuracion.getPwd();
-
-		Connection conn;
-		try {
-			String cadconex = "jdbc:mariadb://" + IP + ":" + PORT + "/" + BBDD + " USER:" + USER + "PWD:" + PWD;
-			System.out.println(cadconex);
-			//Si usamos LAMP Funciona con ambos conectores
-			conn = DriverManager.getConnection("jdbc:mariadb://" + IP + ":" + PORT + "/" + BBDD, USER, PWD);
-			return conn;
-		} catch (SQLException e) {
-			Alert alert = new Alert(Alert.AlertType.ERROR);
-			alert.setTitle("Error");
-			alert.setHeaderText("Ha ocurrido un error de conexión");
-			alert.setContentText(e.getMessage());
-			alert.showAndWait();
-			exit(0);
-			return null;
-		}
-	}
-
-	// Nombre del test
-	public Test buscarTestPorNombre(String nombre) {
-		return testDAO.findByColumn("nombretest", nombre);
-	}
+    public Intentos buscarIntentoPorId(int id) {
+        return intentosDAO.findById(id);
+    }
 
 
-	// Id de la pregunta
-	public Pregunta buscarPreguntaPorId(int id) {
-		return preguntaDAO.findById(id);
-	}
+    private void    mostrarAlerta(Alert.AlertType tipo, String titulo, String header, String mensaje) {
+        Alert alerta = new Alert(tipo);
+        alerta.setTitle(titulo +" | EscolaVision Desktop");
+        alerta.setHeaderText(header);
+        alerta.setContentText(mensaje);
+        Stage alertStage = (Stage) alerta.getDialogPane().getScene().getWindow();
+        alertStage.getIcons().add(new Image("escolavision.png"));
+        alerta.showAndWait();
+    }
 
-	// Dni del alumno
-	public Alumno buscarAlumnoPorDni(String dni) {
-		return alumnoDAO.findByColumn("dni", dni);
-	}
+    //MENU CONTEXTUAL
+    public void mostrarMenu(ActionEvent event) {
+        Button sourceButton = (Button) event.getSource();
 
-	// Dni del profesor
-	public Profesor buscarProfesorPorDni(String dni) {
-		return profesorDAO.findByColumn("dni", dni);
-	}
+        ContextMenu contextMenu = new ContextMenu();
 
-	// Nombre del área
-	public Area buscarAreaPorNombre(String nombre) {
-		return areaDAO.findByColumn("nombre", nombre);
-	}
+        MenuItem creditos = new MenuItem("Créditos");
+        creditos.setOnAction(e -> {
+            try {
+                mostrarCreditos();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
 
-	// Id del PxA
-	public PxA buscarPxAPorId(int id) {
-		return pxaDAO.findById(id);
-	}
-	// Id del intento
-	public Intentos buscarIntentoPorId(int id) {
-		return intentosDAO.findById(id);
-	}
-	private void mostrarAlerta(Alert.AlertType tipo, String titulo, String header, String mensaje) {
-		Alert alerta = new Alert(tipo);
-		alerta.setTitle(titulo);
-		alerta.setHeaderText(header);
-		alerta.setContentText(mensaje);
-		alerta.showAndWait();
-	}
+        MenuItem salir = new MenuItem("Salir");
+        salir.setOnAction(e -> salirAplicacion());
 
-	public void mostrarMenu(ActionEvent event) {
-		Button sourceButton = (Button) event.getSource();
+        contextMenu.getItems().addAll(creditos, salir);
 
-		ContextMenu contextMenu = new ContextMenu();
+        contextMenu.show(sourceButton, Side.BOTTOM, 0, 0);
+    }
 
-		MenuItem creditos = new MenuItem("Créditos");
-		creditos.setOnAction(e -> {
-			try {
-				mostrarCreditos();
-			} catch (IOException ex) {
-				throw new RuntimeException(ex);
-			}
-		});
+    public void mostrarCreditos() throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/vistas/creditos.fxml"));
+        Parent creditosView = loader.load();
 
-		MenuItem salir = new MenuItem("Salir");
-		salir.setOnAction(e -> salirAplicacion());
+        Stage creditosStage = new Stage();
+        creditosStage.setTitle("Créditos | EscolaVision Desktop");
 
-		contextMenu.getItems().addAll(creditos, salir);
+        Scene creditosScene = new Scene(creditosView);
+        creditosStage.setScene(creditosScene);
+        creditosStage.getIcons().add(new Image("escolavision.png"));
+        creditosStage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
 
-		contextMenu.show(sourceButton, Side.BOTTOM, 0, 0);
-	}
-
-	public void mostrarCreditos() throws IOException {
-		System.out.println("Mostrando créditos...");
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("/vistas/creditos.fxml"));
-		Parent creditosView = loader.load();
-
-		Stage creditosStage = new Stage();
-		creditosStage.setTitle("Créditos");
-
-		Scene creditosScene = new Scene(creditosView);
-		creditosStage.setScene(creditosScene);
-		creditosStage.getIcons().add(new Image("escolavision.png"));
-		creditosStage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
-
-		creditosStage.showAndWait();
-	}
-
+        creditosStage.showAndWait();
+    }
 
     public void salirAplicacion() {
+        if(tabHome.isSelected()){
+            System.exit(0);
+        }
+
+        Tab seleccionado = tabPane.getSelectionModel().getSelectedItem();
+        Button editarSeleccionado = tabToButtonMap.get(seleccionado);
         Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION);
-        confirmacion.setTitle("Confirmación de salida");
+        confirmacion.setTitle("Confirmación de salida | EscolaVision Desktop");
         confirmacion.setHeaderText("¿Está seguro de que desea salir?");
-        confirmacion.setContentText("Se perderán todos los cambios no guardados.");
+        Stage alertStage = (Stage) confirmacion.getDialogPane().getScene().getWindow();
+        alertStage.getIcons().add(new Image("escolavision.png"));
+        if(editarSeleccionado.getText().equals("Cancelar")){
+            confirmacion.setContentText("Se perderán todos los cambios no guardados.");
+        }
 
         Optional<ButtonType> resultado = confirmacion.showAndWait();
 
@@ -1673,5 +1991,4 @@ public class miControlador implements Initializable {
             System.exit(0);
         }
     }
-
 }
